@@ -29,15 +29,21 @@ The API provides methods for interacting with etcd's key-value store, covering t
 
 ### Key-Value Operations
 
-- An abstract base class providing a base implementation for key-value operations and key range queries and bulk deletions.
+- A final class providing a base implementation for key-value operations and key range queries and bulk deletions.
 
 ```swift
-/// Abstract class providing a base implementation for key-value get operation with etcd
-class BaseEtcdClient {
+/// Protocol defining the requirements for types used as values in etcdClient
+protocol EtcdValue {
+    /// Initializes the value from a Data object
+    init?(data: Data)
+    
+    /// Converts the value to a Data object
+    func toData() -> Data?
+}
+
+/// Class providing a base implementation for key-value get operation with etcd
+final class EtcdClient {
     /// Method to get value for a key from etcd
-    public func get<Value: etcdClientValue>(_ key: String, as valueType: Value.Type = Value.self) async throws -> Value?  {
-        /// Implementation to retrieve value from etcd
-        return nil
-    }
+    public func get<Value: etcdValue>(_ key: String, as valueType: Value.Type = Value.self) async throws -> Value?  { }
 }
 ```
