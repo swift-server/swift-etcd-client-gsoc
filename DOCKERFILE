@@ -1,4 +1,4 @@
-ARG swift_version=5.8
+ARG swift_version=5.10
 ARG ubuntu_version=jammy
 ARG base_image=swift:$swift_version-$ubuntu_version
 FROM $base_image
@@ -12,14 +12,15 @@ ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 
-# Install etcd client
-ARG ETCD_VERSION=v3.4.2
-RUN curl -L https://github.com/etcd-io/etcd/releases/download/${ETCD_VERSION}/etcd-${ETCD_VERSION}-linux-amd64.tar.gz -o etcd-${ETCD_VERSION}-linux-amd64.tar.gz && \
-    tar xzvf etcd-${ETCD_VERSION}-linux-amd64.tar.gz && \
-    mv etcd-${ETCD_VERSION}-linux-amd64/etcdctl /usr/local/bin/etcdctl && \
-    rm -rf etcd-${ETCD_VERSION}-linux-amd64 etcd-${ETCD_VERSION}-linux-amd64.tar.gz
-
-
 # tools
 RUN mkdir -p $HOME/.tools
 RUN echo 'export PATH="$HOME/.tools:$PATH"' >> $HOME/.profile
+
+# swiftformat (until part of the toolchain)
+ARG swiftformat_version=0.51.8
+RUN git clone --branch $swiftformat_version --depth 1 https://github.com/nicklockwood/SwiftFormat $HOME/.tools/swift-format
+RUN cd $HOME/.tools/swift-format && swift build -c release
+RUN ln -s $HOME/.tools/swift-format/.build/release/swiftformat $HOME/.tools/swiftformat
+
+# install jemalloc for running allocation benchmarks
+RUN apt-get update & apt-get install -y libjemalloc-dev
