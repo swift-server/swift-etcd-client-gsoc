@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package etcdserverpb;
+
+service KV {
+    rpc Range (RangeRequest) returns (RangeResponse);
+}
+
+message RangeRequest {
+    bytes key = 1;
+}
+
+message RangeResponse {
+    repeated KeyValue kvs = 1;
+}
+
+message KeyValue {
+    bytes key = 1;
+    bytes value = 2;
+}

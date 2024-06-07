@@ -33,6 +33,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.56.0"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
         .package(url: "https://github.com/swift-server/swift-service-lifecycle.git", from: "2.0.0"),
+        .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.21.0"),
     ],
     targets: [
         .target(
@@ -43,6 +44,7 @@ let package = Package(
                 .product(name: "NIOEmbedded", package: "swift-nio"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "ServiceLifecycle", package: "swift-service-lifecycle"),
+                .product(name: "GRPC", package: "grpc-swift"),
             ]
         ),
         .testTarget(
