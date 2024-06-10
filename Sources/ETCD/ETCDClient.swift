@@ -18,25 +18,32 @@ public final class EtcdClient {
         self.connection = ClientConnection.insecure(group: self.group)
             .connect(host: host, port: port)
         self.client = Etcdserverpb_KVClient(channel: self.connection)
-        print(client);
-        print("HELLO");
     }
 
     deinit {
         try? self.group.syncShutdownGracefully()
     }
 
-    // public func get<Value: EtcdValue>(_ key: String, as valueType: Value.Type = Value.self) async throws -> Value? {
-    //     let request = Etcdserverpb_RangeRequest.with {
-    //         $0.key = key.data(using: .utf8)!
-    //     }
-    //     let response = try await client.range(request).response
+    public func setKey(key: String, value: String) throws {
+        var putRequest = Etcdserverpb_PutRequest()
+        putRequest.key = Data(key.utf8)
+        putRequest.value = Data(value.utf8)
 
-    //     guard let kv = response.kvs.first,
-    //           let value = Value(data: kv.value) else {
-    //         return nil
-    //     }
+        let call = client.put(putRequest)
+        let response = try call.response.wait()
+        print("Set key response: \(response)")
+    }
 
-    //     return value
-    // }
+    public func getKey(key: String) throws -> String? {
+        var rangeRequest = Etcdserverpb_RangeRequest()
+        rangeRequest.key = Data(key.utf8)
+
+        let call = client.range(rangeRequest)
+        let response = try call.response.wait()
+
+        guard let kv = response.kvs.first else {
+            return nil
+        }
+        return String(data: kv.value, encoding: .utf8)
+    }
 }
