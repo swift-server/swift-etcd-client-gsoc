@@ -20,6 +20,11 @@ internal protocol Etcdserverpb_KVClientProtocol: GRPCClient {
     _ request: Etcdserverpb_RangeRequest,
     callOptions: CallOptions?
   ) -> UnaryCall<Etcdserverpb_RangeRequest, Etcdserverpb_RangeResponse>
+
+  func put(
+    _ request: Etcdserverpb_PutRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Etcdserverpb_PutRequest, Etcdserverpb_PutResponse>
 }
 
 extension Etcdserverpb_KVClientProtocol {
@@ -27,7 +32,7 @@ extension Etcdserverpb_KVClientProtocol {
     return "etcdserverpb.KV"
   }
 
-  /// Unary call to Range
+  /// Range gets the keys in the range from the key-value store.
   ///
   /// - Parameters:
   ///   - request: Request to send to Range.
@@ -42,6 +47,26 @@ extension Etcdserverpb_KVClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeRangeInterceptors() ?? []
+    )
+  }
+
+  /// Put puts the given key into the key-value store.
+  /// A put request increments the revision of the key-value store
+  /// and generates one event in the event history.
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to Put.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func put(
+    _ request: Etcdserverpb_PutRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Etcdserverpb_PutRequest, Etcdserverpb_PutResponse> {
+    return self.makeUnaryCall(
+      path: Etcdserverpb_KVClientMetadata.Methods.put.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makePutInterceptors() ?? []
     )
   }
 }
@@ -112,6 +137,11 @@ internal protocol Etcdserverpb_KVAsyncClientProtocol: GRPCClient {
     _ request: Etcdserverpb_RangeRequest,
     callOptions: CallOptions?
   ) -> GRPCAsyncUnaryCall<Etcdserverpb_RangeRequest, Etcdserverpb_RangeResponse>
+
+  func makePutCall(
+    _ request: Etcdserverpb_PutRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Etcdserverpb_PutRequest, Etcdserverpb_PutResponse>
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -135,6 +165,18 @@ extension Etcdserverpb_KVAsyncClientProtocol {
       interceptors: self.interceptors?.makeRangeInterceptors() ?? []
     )
   }
+
+  internal func makePutCall(
+    _ request: Etcdserverpb_PutRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Etcdserverpb_PutRequest, Etcdserverpb_PutResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Etcdserverpb_KVClientMetadata.Methods.put.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makePutInterceptors() ?? []
+    )
+  }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -148,6 +190,18 @@ extension Etcdserverpb_KVAsyncClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeRangeInterceptors() ?? []
+    )
+  }
+
+  internal func put(
+    _ request: Etcdserverpb_PutRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Etcdserverpb_PutResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Etcdserverpb_KVClientMetadata.Methods.put.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makePutInterceptors() ?? []
     )
   }
 }
@@ -173,6 +227,9 @@ internal protocol Etcdserverpb_KVClientInterceptorFactoryProtocol: Sendable {
 
   /// - Returns: Interceptors to use when invoking 'range'.
   func makeRangeInterceptors() -> [ClientInterceptor<Etcdserverpb_RangeRequest, Etcdserverpb_RangeResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'put'.
+  func makePutInterceptors() -> [ClientInterceptor<Etcdserverpb_PutRequest, Etcdserverpb_PutResponse>]
 }
 
 internal enum Etcdserverpb_KVClientMetadata {
@@ -181,6 +238,7 @@ internal enum Etcdserverpb_KVClientMetadata {
     fullName: "etcdserverpb.KV",
     methods: [
       Etcdserverpb_KVClientMetadata.Methods.range,
+      Etcdserverpb_KVClientMetadata.Methods.put,
     ]
   )
 
@@ -190,6 +248,12 @@ internal enum Etcdserverpb_KVClientMetadata {
       path: "/etcdserverpb.KV/Range",
       type: GRPCCallType.unary
     )
+
+    internal static let put = GRPCMethodDescriptor(
+      name: "Put",
+      path: "/etcdserverpb.KV/Put",
+      type: GRPCCallType.unary
+    )
   }
 }
 
@@ -197,7 +261,13 @@ internal enum Etcdserverpb_KVClientMetadata {
 internal protocol Etcdserverpb_KVProvider: CallHandlerProvider {
   var interceptors: Etcdserverpb_KVServerInterceptorFactoryProtocol? { get }
 
+  /// Range gets the keys in the range from the key-value store.
   func range(request: Etcdserverpb_RangeRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Etcdserverpb_RangeResponse>
+
+  /// Put puts the given key into the key-value store.
+  /// A put request increments the revision of the key-value store
+  /// and generates one event in the event history.
+  func put(request: Etcdserverpb_PutRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Etcdserverpb_PutResponse>
 }
 
 extension Etcdserverpb_KVProvider {
@@ -221,6 +291,15 @@ extension Etcdserverpb_KVProvider {
         userFunction: self.range(request:context:)
       )
 
+    case "Put":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Etcdserverpb_PutRequest>(),
+        responseSerializer: ProtobufSerializer<Etcdserverpb_PutResponse>(),
+        interceptors: self.interceptors?.makePutInterceptors() ?? [],
+        userFunction: self.put(request:context:)
+      )
+
     default:
       return nil
     }
@@ -233,10 +312,19 @@ internal protocol Etcdserverpb_KVAsyncProvider: CallHandlerProvider, Sendable {
   static var serviceDescriptor: GRPCServiceDescriptor { get }
   var interceptors: Etcdserverpb_KVServerInterceptorFactoryProtocol? { get }
 
+  /// Range gets the keys in the range from the key-value store.
   func range(
     request: Etcdserverpb_RangeRequest,
     context: GRPCAsyncServerCallContext
   ) async throws -> Etcdserverpb_RangeResponse
+
+  /// Put puts the given key into the key-value store.
+  /// A put request increments the revision of the key-value store
+  /// and generates one event in the event history.
+  func put(
+    request: Etcdserverpb_PutRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Etcdserverpb_PutResponse
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -267,6 +355,15 @@ extension Etcdserverpb_KVAsyncProvider {
         wrapping: { try await self.range(request: $0, context: $1) }
       )
 
+    case "Put":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Etcdserverpb_PutRequest>(),
+        responseSerializer: ProtobufSerializer<Etcdserverpb_PutResponse>(),
+        interceptors: self.interceptors?.makePutInterceptors() ?? [],
+        wrapping: { try await self.put(request: $0, context: $1) }
+      )
+
     default:
       return nil
     }
@@ -278,6 +375,10 @@ internal protocol Etcdserverpb_KVServerInterceptorFactoryProtocol: Sendable {
   /// - Returns: Interceptors to use when handling 'range'.
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeRangeInterceptors() -> [ServerInterceptor<Etcdserverpb_RangeRequest, Etcdserverpb_RangeResponse>]
+
+  /// - Returns: Interceptors to use when handling 'put'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makePutInterceptors() -> [ServerInterceptor<Etcdserverpb_PutRequest, Etcdserverpb_PutResponse>]
 }
 
 internal enum Etcdserverpb_KVServerMetadata {
@@ -286,6 +387,7 @@ internal enum Etcdserverpb_KVServerMetadata {
     fullName: "etcdserverpb.KV",
     methods: [
       Etcdserverpb_KVServerMetadata.Methods.range,
+      Etcdserverpb_KVServerMetadata.Methods.put,
     ]
   )
 
@@ -293,6 +395,12 @@ internal enum Etcdserverpb_KVServerMetadata {
     internal static let range = GRPCMethodDescriptor(
       name: "Range",
       path: "/etcdserverpb.KV/Range",
+      type: GRPCCallType.unary
+    )
+
+    internal static let put = GRPCMethodDescriptor(
+      name: "Put",
+      path: "/etcdserverpb.KV/Put",
       type: GRPCCallType.unary
     )
   }

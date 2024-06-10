@@ -20,58 +20,346 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
-struct Etcdserverpb_RangeRequest {
+struct Etcdserverpb_KeyValue {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  /// key is the key in bytes. An empty key is not allowed.
   var key: Data = Data()
+
+  /// create_revision is the revision of last creation on this key.
+  var createRevision: Int64 = 0
+
+  /// mod_revision is the revision of last modification on this key.
+  var modRevision: Int64 = 0
+
+  /// version is the version of the key. A deletion resets
+  /// the version to zero and any modification of the key
+  /// increases its version.
+  var version: Int64 = 0
+
+  /// value is the value held by the key, in bytes.
+  var value: Data = Data()
+
+  /// lease is the ID of the lease that attached to key.
+  /// When the attached lease expires, the key will be deleted.
+  /// If lease is 0, then no lease is attached to the key.
+  var lease: Int64 = 0
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
 }
+
+struct Etcdserverpb_ResponseHeader {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// cluster_id is the ID of the cluster which sent the response.
+  var clusterID: UInt64 = 0
+
+  /// member_id is the ID of the member which sent the response.
+  var memberID: UInt64 = 0
+
+  /// revision is the key-value store revision when the request was applied, and it's
+  /// unset (so 0) in case of calls not interacting with key-value store.
+  /// For watch progress responses, the header.revision indicates progress. All future events
+  /// received in this stream are guaranteed to have a higher revision number than the
+  /// header.revision number.
+  var revision: Int64 = 0
+
+  /// raft_term is the raft term when the request was applied.
+  var raftTerm: UInt64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Etcdserverpb_RangeRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// key is the first key for the range. If range_end is not given, the request only looks up key.
+  var key: Data = Data()
+
+  /// range_end is the upper bound on the requested range [key, range_end).
+  /// If range_end is '\0', the range is all keys >= key.
+  /// If range_end is key plus one (e.g., "aa"+1 == "ab", "a\xff"+1 == "b"),
+  /// then the range request gets all keys prefixed with key.
+  /// If both key and range_end are '\0', then the range request returns all keys.
+  var rangeEnd: Data = Data()
+
+  /// limit is a limit on the number of keys returned for the request. When limit is set to 0,
+  /// it is treated as no limit.
+  var limit: Int64 = 0
+
+  /// revision is the point-in-time of the key-value store to use for the range.
+  /// If revision is less or equal to zero, the range is over the newest key-value store.
+  /// If the revision has been compacted, ErrCompacted is returned as a response.
+  var revision: Int64 = 0
+
+  /// sort_order is the order for returned sorted results.
+  var sortOrder: Etcdserverpb_RangeRequest.SortOrder = .none
+
+  /// sort_target is the key-value field to use for sorting.
+  var sortTarget: Etcdserverpb_RangeRequest.SortTarget = .key
+
+  /// serializable sets the range request to use serializable member-local reads.
+  /// Range requests are linearizable by default; linearizable requests have higher
+  /// latency and lower throughput than serializable requests but reflect the current
+  /// consensus of the cluster. For better performance, in exchange for possible stale reads,
+  /// a serializable range request is served locally without needing to reach consensus
+  /// with other nodes in the cluster.
+  var serializable: Bool = false
+
+  /// keys_only when set returns only the keys and not the values.
+  var keysOnly: Bool = false
+
+  /// count_only when set returns only the count of the keys in the range.
+  var countOnly: Bool = false
+
+  /// min_mod_revision is the lower bound for returned key mod revisions; all keys with
+  /// lesser mod revisions will be filtered away.
+  var minModRevision: Int64 = 0
+
+  /// max_mod_revision is the upper bound for returned key mod revisions; all keys with
+  /// greater mod revisions will be filtered away.
+  var maxModRevision: Int64 = 0
+
+  /// min_create_revision is the lower bound for returned key create revisions; all keys with
+  /// lesser create revisions will be filtered away.
+  var minCreateRevision: Int64 = 0
+
+  /// max_create_revision is the upper bound for returned key create revisions; all keys with
+  /// greater create revisions will be filtered away.
+  var maxCreateRevision: Int64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  enum SortOrder: SwiftProtobuf.Enum {
+    typealias RawValue = Int
+
+    /// default, no sorting
+    case none // = 0
+
+    /// lowest target value first
+    case ascend // = 1
+
+    /// highest target value first
+    case descend // = 2
+    case UNRECOGNIZED(Int)
+
+    init() {
+      self = .none
+    }
+
+    init?(rawValue: Int) {
+      switch rawValue {
+      case 0: self = .none
+      case 1: self = .ascend
+      case 2: self = .descend
+      default: self = .UNRECOGNIZED(rawValue)
+      }
+    }
+
+    var rawValue: Int {
+      switch self {
+      case .none: return 0
+      case .ascend: return 1
+      case .descend: return 2
+      case .UNRECOGNIZED(let i): return i
+      }
+    }
+
+  }
+
+  enum SortTarget: SwiftProtobuf.Enum {
+    typealias RawValue = Int
+    case key // = 0
+    case version // = 1
+    case create // = 2
+    case mod // = 3
+    case value // = 4
+    case UNRECOGNIZED(Int)
+
+    init() {
+      self = .key
+    }
+
+    init?(rawValue: Int) {
+      switch rawValue {
+      case 0: self = .key
+      case 1: self = .version
+      case 2: self = .create
+      case 3: self = .mod
+      case 4: self = .value
+      default: self = .UNRECOGNIZED(rawValue)
+      }
+    }
+
+    var rawValue: Int {
+      switch self {
+      case .key: return 0
+      case .version: return 1
+      case .create: return 2
+      case .mod: return 3
+      case .value: return 4
+      case .UNRECOGNIZED(let i): return i
+      }
+    }
+
+  }
+
+  init() {}
+}
+
+#if swift(>=4.2)
+
+extension Etcdserverpb_RangeRequest.SortOrder: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static let allCases: [Etcdserverpb_RangeRequest.SortOrder] = [
+    .none,
+    .ascend,
+    .descend,
+  ]
+}
+
+extension Etcdserverpb_RangeRequest.SortTarget: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static let allCases: [Etcdserverpb_RangeRequest.SortTarget] = [
+    .key,
+    .version,
+    .create,
+    .mod,
+    .value,
+  ]
+}
+
+#endif  // swift(>=4.2)
 
 struct Etcdserverpb_RangeResponse {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  var header: Etcdserverpb_ResponseHeader {
+    get {return _header ?? Etcdserverpb_ResponseHeader()}
+    set {_header = newValue}
+  }
+  /// Returns true if `header` has been explicitly set.
+  var hasHeader: Bool {return self._header != nil}
+  /// Clears the value of `header`. Subsequent reads from it will return its default value.
+  mutating func clearHeader() {self._header = nil}
+
+  /// kvs is the list of key-value pairs matched by the range request.
+  /// kvs is empty when count is requested.
   var kvs: [Etcdserverpb_KeyValue] = []
+
+  /// more indicates if there are more keys to return in the requested range.
+  var more: Bool = false
+
+  /// count is set to the number of keys within the range when requested.
+  var count: Int64 = 0
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
+
+  fileprivate var _header: Etcdserverpb_ResponseHeader? = nil
 }
 
-struct Etcdserverpb_KeyValue {
+struct Etcdserverpb_PutRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  /// key is the key, in bytes, to put into the key-value store.
   var key: Data = Data()
 
+  /// value is the value, in bytes, to associate with the key in the key-value store.
   var value: Data = Data()
+
+  /// lease is the lease ID to associate with the key in the key-value store. A lease
+  /// value of 0 indicates no lease.
+  var lease: Int64 = 0
+
+  /// If prev_kv is set, etcd gets the previous key-value pair before changing it.
+  /// The previous key-value pair will be returned in the put response.
+  var prevKv: Bool = false
+
+  /// If ignore_value is set, etcd updates the key using its current value.
+  /// Returns an error if the key does not exist.
+  var ignoreValue: Bool = false
+
+  /// If ignore_lease is set, etcd updates the key using its current lease.
+  /// Returns an error if the key does not exist.
+  var ignoreLease: Bool = false
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
 }
 
+struct Etcdserverpb_PutResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var header: Etcdserverpb_ResponseHeader {
+    get {return _header ?? Etcdserverpb_ResponseHeader()}
+    set {_header = newValue}
+  }
+  /// Returns true if `header` has been explicitly set.
+  var hasHeader: Bool {return self._header != nil}
+  /// Clears the value of `header`. Subsequent reads from it will return its default value.
+  mutating func clearHeader() {self._header = nil}
+
+  /// if prev_kv is set in the request, the previous key-value pair will be returned.
+  var prevKv: Etcdserverpb_KeyValue {
+    get {return _prevKv ?? Etcdserverpb_KeyValue()}
+    set {_prevKv = newValue}
+  }
+  /// Returns true if `prevKv` has been explicitly set.
+  var hasPrevKv: Bool {return self._prevKv != nil}
+  /// Clears the value of `prevKv`. Subsequent reads from it will return its default value.
+  mutating func clearPrevKv() {self._prevKv = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _header: Etcdserverpb_ResponseHeader? = nil
+  fileprivate var _prevKv: Etcdserverpb_KeyValue? = nil
+}
+
 #if swift(>=5.5) && canImport(_Concurrency)
-extension Etcdserverpb_RangeRequest: @unchecked Sendable {}
-extension Etcdserverpb_RangeResponse: @unchecked Sendable {}
 extension Etcdserverpb_KeyValue: @unchecked Sendable {}
+extension Etcdserverpb_ResponseHeader: @unchecked Sendable {}
+extension Etcdserverpb_RangeRequest: @unchecked Sendable {}
+extension Etcdserverpb_RangeRequest.SortOrder: @unchecked Sendable {}
+extension Etcdserverpb_RangeRequest.SortTarget: @unchecked Sendable {}
+extension Etcdserverpb_RangeResponse: @unchecked Sendable {}
+extension Etcdserverpb_PutRequest: @unchecked Sendable {}
+extension Etcdserverpb_PutResponse: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "etcdserverpb"
 
-extension Etcdserverpb_RangeRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".RangeRequest"
+extension Etcdserverpb_KeyValue: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".KeyValue"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "key"),
+    2: .standard(proto: "create_revision"),
+    3: .standard(proto: "mod_revision"),
+    4: .same(proto: "version"),
+    5: .same(proto: "value"),
+    6: .same(proto: "lease"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -81,6 +369,11 @@ extension Etcdserverpb_RangeRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularBytesField(value: &self.key) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.createRevision) }()
+      case 3: try { try decoder.decodeSingularInt64Field(value: &self.modRevision) }()
+      case 4: try { try decoder.decodeSingularInt64Field(value: &self.version) }()
+      case 5: try { try decoder.decodeSingularBytesField(value: &self.value) }()
+      case 6: try { try decoder.decodeSingularInt64Field(value: &self.lease) }()
       default: break
       }
     }
@@ -90,20 +383,43 @@ extension Etcdserverpb_RangeRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if !self.key.isEmpty {
       try visitor.visitSingularBytesField(value: self.key, fieldNumber: 1)
     }
+    if self.createRevision != 0 {
+      try visitor.visitSingularInt64Field(value: self.createRevision, fieldNumber: 2)
+    }
+    if self.modRevision != 0 {
+      try visitor.visitSingularInt64Field(value: self.modRevision, fieldNumber: 3)
+    }
+    if self.version != 0 {
+      try visitor.visitSingularInt64Field(value: self.version, fieldNumber: 4)
+    }
+    if !self.value.isEmpty {
+      try visitor.visitSingularBytesField(value: self.value, fieldNumber: 5)
+    }
+    if self.lease != 0 {
+      try visitor.visitSingularInt64Field(value: self.lease, fieldNumber: 6)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Etcdserverpb_RangeRequest, rhs: Etcdserverpb_RangeRequest) -> Bool {
+  static func ==(lhs: Etcdserverpb_KeyValue, rhs: Etcdserverpb_KeyValue) -> Bool {
     if lhs.key != rhs.key {return false}
+    if lhs.createRevision != rhs.createRevision {return false}
+    if lhs.modRevision != rhs.modRevision {return false}
+    if lhs.version != rhs.version {return false}
+    if lhs.value != rhs.value {return false}
+    if lhs.lease != rhs.lease {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension Etcdserverpb_RangeResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".RangeResponse"
+extension Etcdserverpb_ResponseHeader: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".ResponseHeader"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "kvs"),
+    1: .standard(proto: "cluster_id"),
+    2: .standard(proto: "member_id"),
+    3: .same(proto: "revision"),
+    4: .standard(proto: "raft_term"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -112,31 +428,226 @@ extension Etcdserverpb_RangeResponse: SwiftProtobuf.Message, SwiftProtobuf._Mess
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.kvs) }()
+      case 1: try { try decoder.decodeSingularUInt64Field(value: &self.clusterID) }()
+      case 2: try { try decoder.decodeSingularUInt64Field(value: &self.memberID) }()
+      case 3: try { try decoder.decodeSingularInt64Field(value: &self.revision) }()
+      case 4: try { try decoder.decodeSingularUInt64Field(value: &self.raftTerm) }()
       default: break
       }
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.kvs.isEmpty {
-      try visitor.visitRepeatedMessageField(value: self.kvs, fieldNumber: 1)
+    if self.clusterID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.clusterID, fieldNumber: 1)
+    }
+    if self.memberID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.memberID, fieldNumber: 2)
+    }
+    if self.revision != 0 {
+      try visitor.visitSingularInt64Field(value: self.revision, fieldNumber: 3)
+    }
+    if self.raftTerm != 0 {
+      try visitor.visitSingularUInt64Field(value: self.raftTerm, fieldNumber: 4)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Etcdserverpb_RangeResponse, rhs: Etcdserverpb_RangeResponse) -> Bool {
-    if lhs.kvs != rhs.kvs {return false}
+  static func ==(lhs: Etcdserverpb_ResponseHeader, rhs: Etcdserverpb_ResponseHeader) -> Bool {
+    if lhs.clusterID != rhs.clusterID {return false}
+    if lhs.memberID != rhs.memberID {return false}
+    if lhs.revision != rhs.revision {return false}
+    if lhs.raftTerm != rhs.raftTerm {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension Etcdserverpb_KeyValue: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".KeyValue"
+extension Etcdserverpb_RangeRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".RangeRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "key"),
+    2: .standard(proto: "range_end"),
+    3: .same(proto: "limit"),
+    4: .same(proto: "revision"),
+    5: .standard(proto: "sort_order"),
+    6: .standard(proto: "sort_target"),
+    7: .same(proto: "serializable"),
+    8: .standard(proto: "keys_only"),
+    9: .standard(proto: "count_only"),
+    10: .standard(proto: "min_mod_revision"),
+    11: .standard(proto: "max_mod_revision"),
+    12: .standard(proto: "min_create_revision"),
+    13: .standard(proto: "max_create_revision"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularBytesField(value: &self.key) }()
+      case 2: try { try decoder.decodeSingularBytesField(value: &self.rangeEnd) }()
+      case 3: try { try decoder.decodeSingularInt64Field(value: &self.limit) }()
+      case 4: try { try decoder.decodeSingularInt64Field(value: &self.revision) }()
+      case 5: try { try decoder.decodeSingularEnumField(value: &self.sortOrder) }()
+      case 6: try { try decoder.decodeSingularEnumField(value: &self.sortTarget) }()
+      case 7: try { try decoder.decodeSingularBoolField(value: &self.serializable) }()
+      case 8: try { try decoder.decodeSingularBoolField(value: &self.keysOnly) }()
+      case 9: try { try decoder.decodeSingularBoolField(value: &self.countOnly) }()
+      case 10: try { try decoder.decodeSingularInt64Field(value: &self.minModRevision) }()
+      case 11: try { try decoder.decodeSingularInt64Field(value: &self.maxModRevision) }()
+      case 12: try { try decoder.decodeSingularInt64Field(value: &self.minCreateRevision) }()
+      case 13: try { try decoder.decodeSingularInt64Field(value: &self.maxCreateRevision) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.key.isEmpty {
+      try visitor.visitSingularBytesField(value: self.key, fieldNumber: 1)
+    }
+    if !self.rangeEnd.isEmpty {
+      try visitor.visitSingularBytesField(value: self.rangeEnd, fieldNumber: 2)
+    }
+    if self.limit != 0 {
+      try visitor.visitSingularInt64Field(value: self.limit, fieldNumber: 3)
+    }
+    if self.revision != 0 {
+      try visitor.visitSingularInt64Field(value: self.revision, fieldNumber: 4)
+    }
+    if self.sortOrder != .none {
+      try visitor.visitSingularEnumField(value: self.sortOrder, fieldNumber: 5)
+    }
+    if self.sortTarget != .key {
+      try visitor.visitSingularEnumField(value: self.sortTarget, fieldNumber: 6)
+    }
+    if self.serializable != false {
+      try visitor.visitSingularBoolField(value: self.serializable, fieldNumber: 7)
+    }
+    if self.keysOnly != false {
+      try visitor.visitSingularBoolField(value: self.keysOnly, fieldNumber: 8)
+    }
+    if self.countOnly != false {
+      try visitor.visitSingularBoolField(value: self.countOnly, fieldNumber: 9)
+    }
+    if self.minModRevision != 0 {
+      try visitor.visitSingularInt64Field(value: self.minModRevision, fieldNumber: 10)
+    }
+    if self.maxModRevision != 0 {
+      try visitor.visitSingularInt64Field(value: self.maxModRevision, fieldNumber: 11)
+    }
+    if self.minCreateRevision != 0 {
+      try visitor.visitSingularInt64Field(value: self.minCreateRevision, fieldNumber: 12)
+    }
+    if self.maxCreateRevision != 0 {
+      try visitor.visitSingularInt64Field(value: self.maxCreateRevision, fieldNumber: 13)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Etcdserverpb_RangeRequest, rhs: Etcdserverpb_RangeRequest) -> Bool {
+    if lhs.key != rhs.key {return false}
+    if lhs.rangeEnd != rhs.rangeEnd {return false}
+    if lhs.limit != rhs.limit {return false}
+    if lhs.revision != rhs.revision {return false}
+    if lhs.sortOrder != rhs.sortOrder {return false}
+    if lhs.sortTarget != rhs.sortTarget {return false}
+    if lhs.serializable != rhs.serializable {return false}
+    if lhs.keysOnly != rhs.keysOnly {return false}
+    if lhs.countOnly != rhs.countOnly {return false}
+    if lhs.minModRevision != rhs.minModRevision {return false}
+    if lhs.maxModRevision != rhs.maxModRevision {return false}
+    if lhs.minCreateRevision != rhs.minCreateRevision {return false}
+    if lhs.maxCreateRevision != rhs.maxCreateRevision {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Etcdserverpb_RangeRequest.SortOrder: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "NONE"),
+    1: .same(proto: "ASCEND"),
+    2: .same(proto: "DESCEND"),
+  ]
+}
+
+extension Etcdserverpb_RangeRequest.SortTarget: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "KEY"),
+    1: .same(proto: "VERSION"),
+    2: .same(proto: "CREATE"),
+    3: .same(proto: "MOD"),
+    4: .same(proto: "VALUE"),
+  ]
+}
+
+extension Etcdserverpb_RangeResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".RangeResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "header"),
+    2: .same(proto: "kvs"),
+    3: .same(proto: "more"),
+    4: .same(proto: "count"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._header) }()
+      case 2: try { try decoder.decodeRepeatedMessageField(value: &self.kvs) }()
+      case 3: try { try decoder.decodeSingularBoolField(value: &self.more) }()
+      case 4: try { try decoder.decodeSingularInt64Field(value: &self.count) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._header {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    if !self.kvs.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.kvs, fieldNumber: 2)
+    }
+    if self.more != false {
+      try visitor.visitSingularBoolField(value: self.more, fieldNumber: 3)
+    }
+    if self.count != 0 {
+      try visitor.visitSingularInt64Field(value: self.count, fieldNumber: 4)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Etcdserverpb_RangeResponse, rhs: Etcdserverpb_RangeResponse) -> Bool {
+    if lhs._header != rhs._header {return false}
+    if lhs.kvs != rhs.kvs {return false}
+    if lhs.more != rhs.more {return false}
+    if lhs.count != rhs.count {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Etcdserverpb_PutRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".PutRequest"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "key"),
     2: .same(proto: "value"),
+    3: .same(proto: "lease"),
+    4: .standard(proto: "prev_kv"),
+    5: .standard(proto: "ignore_value"),
+    6: .standard(proto: "ignore_lease"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -147,6 +658,10 @@ extension Etcdserverpb_KeyValue: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularBytesField(value: &self.key) }()
       case 2: try { try decoder.decodeSingularBytesField(value: &self.value) }()
+      case 3: try { try decoder.decodeSingularInt64Field(value: &self.lease) }()
+      case 4: try { try decoder.decodeSingularBoolField(value: &self.prevKv) }()
+      case 5: try { try decoder.decodeSingularBoolField(value: &self.ignoreValue) }()
+      case 6: try { try decoder.decodeSingularBoolField(value: &self.ignoreLease) }()
       default: break
       }
     }
@@ -159,12 +674,70 @@ extension Etcdserverpb_KeyValue: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     if !self.value.isEmpty {
       try visitor.visitSingularBytesField(value: self.value, fieldNumber: 2)
     }
+    if self.lease != 0 {
+      try visitor.visitSingularInt64Field(value: self.lease, fieldNumber: 3)
+    }
+    if self.prevKv != false {
+      try visitor.visitSingularBoolField(value: self.prevKv, fieldNumber: 4)
+    }
+    if self.ignoreValue != false {
+      try visitor.visitSingularBoolField(value: self.ignoreValue, fieldNumber: 5)
+    }
+    if self.ignoreLease != false {
+      try visitor.visitSingularBoolField(value: self.ignoreLease, fieldNumber: 6)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Etcdserverpb_KeyValue, rhs: Etcdserverpb_KeyValue) -> Bool {
+  static func ==(lhs: Etcdserverpb_PutRequest, rhs: Etcdserverpb_PutRequest) -> Bool {
     if lhs.key != rhs.key {return false}
     if lhs.value != rhs.value {return false}
+    if lhs.lease != rhs.lease {return false}
+    if lhs.prevKv != rhs.prevKv {return false}
+    if lhs.ignoreValue != rhs.ignoreValue {return false}
+    if lhs.ignoreLease != rhs.ignoreLease {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Etcdserverpb_PutResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".PutResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "header"),
+    2: .standard(proto: "prev_kv"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._header) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._prevKv) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._header {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    try { if let v = self._prevKv {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Etcdserverpb_PutResponse, rhs: Etcdserverpb_PutResponse) -> Bool {
+    if lhs._header != rhs._header {return false}
+    if lhs._prevKv != rhs._prevKv {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
