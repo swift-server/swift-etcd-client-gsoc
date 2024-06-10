@@ -34,6 +34,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
         .package(url: "https://github.com/swift-server/swift-service-lifecycle.git", from: "2.0.0"),
         .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.21.0"),
+        .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.14.0"),
     ],
     targets: [
         .target(
@@ -45,7 +46,11 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "ServiceLifecycle", package: "swift-service-lifecycle"),
                 .product(name: "GRPC", package: "grpc-swift"),
-            ]
+                .product(name: "SwiftProtobuf", package: "swift-protobuf"),
+            ],
+            path: "Sources/ETCD",
+            sources: ["ETCDClient.swift", "ETCDValue.swift", "proto/etcd.grpc.swift", "proto/etcd.pb.swift"]
+
         ),
         .testTarget(
             name: "ETCDTests",
@@ -53,9 +58,8 @@ let package = Package(
         ),
         .executableTarget(
             name: "ETCDExample",
-            dependencies: [
-                .target(name: "ETCD"),
-            ]
+            dependencies: ["ETCD"],
+            path: "Sources/ETCDExample"
         ),
     ]
 )
