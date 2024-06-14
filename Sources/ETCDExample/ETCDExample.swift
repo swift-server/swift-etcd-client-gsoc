@@ -15,27 +15,17 @@
 import ETCD
 import NIO
 
+@main
 struct Example {
-    static func run() async throws {
+    static func main() async throws {
         do {
             let etcdClient = EtcdClient(host: "localhost", port: 2379, eventLoopGroup: MultiThreadedEventLoopGroup(numberOfThreads: 1))
-            try await etcdClient.setKey(key: "foo", value: "bar")
-            if let value = try await etcdClient.getKey(key: "foo") {
+            try await etcdClient.set("foo", value: "bar")
+            if let value = try await etcdClient.get("foo") {
                 print("Value is: \(value)")
             } else {
                 print("Key not found")
             }
-        } catch {
-            print("Error: \(error)")
-        }
-    }
-}
-
-@main
-struct Main {
-    static func main() async {
-        do {
-            try await Example.run()
         } catch {
             print("Error: \(error)")
         }

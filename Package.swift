@@ -47,10 +47,7 @@ let package = Package(
                 .product(name: "ServiceLifecycle", package: "swift-service-lifecycle"),
                 .product(name: "GRPC", package: "grpc-swift"),
                 .product(name: "SwiftProtobuf", package: "swift-protobuf"),
-            ],
-            path: "Sources/ETCD",
-            sources: ["ETCDClient.swift", "ETCDValue.swift", "proto/etcd.grpc.swift", "proto/etcd.pb.swift"]
-
+            ]
         ),
         .testTarget(
             name: "ETCDTests",
@@ -58,8 +55,7 @@ let package = Package(
         ),
         .executableTarget(
             name: "ETCDExample",
-            dependencies: ["ETCD"],
-            path: "Sources/ETCDExample"
+            dependencies: ["ETCD"]
         ),
     ]
 )

@@ -3,7 +3,6 @@ import GRPC
 import NIO
 import SwiftProtobuf
 
-
 public final class EtcdClient: Sendable {
     private let host: String
     private let port: Int
