@@ -49,7 +49,7 @@ let package = Package(
                 .product(name: "SwiftProtobuf", package: "swift-protobuf"),
             ],
             path: "Sources/ETCD",
-            sources: ["ETCDClient.swift", "proto/etcd.grpc.swift", "proto/etcd.pb.swift"]
+            sources: ["ETCDClient.swift", "ETCDValue.swift", "proto/etcd.grpc.swift", "proto/etcd.pb.swift"]
 
         ),
         .testTarget(
