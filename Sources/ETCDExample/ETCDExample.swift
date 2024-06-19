@@ -22,7 +22,11 @@ struct Example {
             let etcdClient = EtcdClient(host: "localhost", port: 2379, eventLoopGroup: MultiThreadedEventLoopGroup(numberOfThreads: 1))
             try await etcdClient.set("foo", value: "bar")
             if let value = try await etcdClient.get("foo") {
-                print("Value is: \(value)")
+                if let stringValue = String(data: value, encoding: .utf8) {
+                    print("Value is: \(stringValue)")
+                } else {
+                    print("Unable to get value")
+                }
             } else {
                 print("Key not found")
             }
