@@ -88,7 +88,6 @@ public final class EtcdClient: @unchecked Sendable {
     /// Delete the value for a key from the ETCD server.
     ///
     /// - Parameter key: The key to delete. Parameter is of type Sequence<UInt8>.
-    /// - Returns: A `Value` containing the fetched value, or `nil` if no value was found.
     public func delete(_ key: some Sequence<UInt8>) async throws {
         var deleteRangeRequest = Etcdserverpb_DeleteRangeRequest()
         deleteRangeRequest.key = Data(key)
@@ -98,7 +97,7 @@ public final class EtcdClient: @unchecked Sendable {
     
     /// Deletes the value for a key from the ETCD server.
     ///
-    /// - Parameter key: The key to fetch the value for. Parameter is of type String.
+    /// - Parameter key: The key to delete the value for. Parameter is of type String.
     public func delete(_ key: String) async throws {
         return try await delete(key.utf8)
     }
