@@ -22,7 +22,7 @@ public final class EtcdClient: @unchecked Sendable {
     private let port: Int
     private var group: EventLoopGroup
     private var connection: ClientConnection
-    private var client: Etcdserverpb_KVNIOClient!
+    private var client: Etcdserverpb_KVNIOClient
 
     /// Initialize a new ETCD Connection.
     ///
