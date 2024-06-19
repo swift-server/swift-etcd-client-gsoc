@@ -42,8 +42,8 @@ public final class EtcdClient: @unchecked Sendable {
     /// Sets a value for a specified key in the ETCD server.
     ///
     /// - Parameters:
-        ///   - key: The key for which the value is to be set. Parameter is of type Sequence<UInt8>.
-        ///   - value: The ETCD value to set for the key. Parameter is of type Sequence<UInt8>.
+    ///   - key: The key for which the value is to be set. Parameter is of type Sequence<UInt8>.
+    ///   - value: The ETCD value to set for the key. Parameter is of type Sequence<UInt8>.
     public func set(_ key: some Sequence<UInt8>, value: some Sequence<UInt8>) async throws {
         var putRequest = Etcdserverpb_PutRequest()
         putRequest.key = Data(key)
@@ -55,8 +55,8 @@ public final class EtcdClient: @unchecked Sendable {
     /// Sets a value for a specified key in the ETCD server.
     ///
     /// - Parameters:
-        ///   - key: The key for which the value is to be set. Parameter is of type String,
-        ///   - value: The ETCD value to set for the key. Parameter is of type String.
+    ///   - key: The key for which the value is to be set. Parameter is of type String,
+    ///   - value: The ETCD value to set for the key. Parameter is of type String.
     public func set(_ key: String, value: String) async throws {
         try await set(key.utf8, value: value.utf8)
     }

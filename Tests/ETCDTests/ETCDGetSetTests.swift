@@ -13,19 +13,15 @@
 //===----------------------------------------------------------------------===//
 import XCTest
 import NIO
-@testable import ETCD
+import ETCD
 
 final class EtcdClientTests: XCTestCase {
     var eventLoopGroup: EventLoopGroup!
     var etcdClient: EtcdClient!
 
     override func setUp() async throws {
-        eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+        eventLoopGroup = MultiThreadedEventLoopGroup.singleton
         etcdClient = EtcdClient(host: "localhost", port: 2379, eventLoopGroup: eventLoopGroup)
-    }
-
-    override func tearDown() async throws {
-        try await eventLoopGroup.shutdownGracefully()
     }
 
     func testSetAndGetStringValue() async throws {
