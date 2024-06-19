@@ -36,4 +36,30 @@ final class EtcdClientTests: XCTestCase {
         let result = try await etcdClient.get("nonExistentKey")
         XCTAssertNil(result)
     }
+    
+    func testDeleteKeyExists() async throws {
+        let key = "testKey"
+        let value = "testValue"
+        try await etcdClient.set(key, value: value)
+        
+        var fetchedValue = try await etcdClient.get(key)
+        XCTAssertNotNil(fetchedValue)
+        
+        try await etcdClient.delete(key)
+        
+        fetchedValue = try await etcdClient.get(key)
+        XCTAssertNil(fetchedValue)
+    }
+        
+    func testDeleteNonExistentKey() async throws {
+        let key = "testKey"
+        
+        var fetchedValue = try await etcdClient.get(key)
+        XCTAssertNil(fetchedValue)
+        
+        try await etcdClient.delete(key)
+        
+        fetchedValue = try await etcdClient.get(key)
+        XCTAssertNil(fetchedValue)
+    }
 }

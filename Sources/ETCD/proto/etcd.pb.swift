@@ -336,6 +336,57 @@ struct Etcdserverpb_PutResponse {
   fileprivate var _prevKv: Etcdserverpb_KeyValue? = nil
 }
 
+struct Etcdserverpb_DeleteRangeRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// key is the first key to delete in the range.
+  var key: Data = Data()
+
+  /// range_end is the key following the last key to delete for the range [key, range_end).
+  /// If range_end is not given, the range is defined to contain only the key argument.
+  /// If range_end is one bit larger than the given key, then the range is all the keys
+  /// with the prefix (the given key).
+  /// If range_end is '\0', the range is all keys greater than or equal to the key argument.
+  var rangeEnd: Data = Data()
+
+  /// If prev_kv is set, etcd gets the previous key-value pairs before deleting it.
+  /// The previous key-value pairs will be returned in the delete response.
+  var prevKv: Bool = false
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Etcdserverpb_DeleteRangeResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var header: Etcdserverpb_ResponseHeader {
+    get {return _header ?? Etcdserverpb_ResponseHeader()}
+    set {_header = newValue}
+  }
+  /// Returns true if `header` has been explicitly set.
+  var hasHeader: Bool {return self._header != nil}
+  /// Clears the value of `header`. Subsequent reads from it will return its default value.
+  mutating func clearHeader() {self._header = nil}
+
+  /// deleted is the number of keys deleted by the delete range request.
+  var deleted: Int64 = 0
+
+  /// if prev_kv is set in the request, the previous key-value pairs will be returned.
+  var prevKvs: [Etcdserverpb_KeyValue] = []
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _header: Etcdserverpb_ResponseHeader? = nil
+}
+
 #if swift(>=5.5) && canImport(_Concurrency)
 extension Etcdserverpb_KeyValue: @unchecked Sendable {}
 extension Etcdserverpb_ResponseHeader: @unchecked Sendable {}
@@ -345,6 +396,8 @@ extension Etcdserverpb_RangeRequest.SortTarget: @unchecked Sendable {}
 extension Etcdserverpb_RangeResponse: @unchecked Sendable {}
 extension Etcdserverpb_PutRequest: @unchecked Sendable {}
 extension Etcdserverpb_PutResponse: @unchecked Sendable {}
+extension Etcdserverpb_DeleteRangeRequest: @unchecked Sendable {}
+extension Etcdserverpb_DeleteRangeResponse: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -738,6 +791,98 @@ extension Etcdserverpb_PutResponse: SwiftProtobuf.Message, SwiftProtobuf._Messag
   static func ==(lhs: Etcdserverpb_PutResponse, rhs: Etcdserverpb_PutResponse) -> Bool {
     if lhs._header != rhs._header {return false}
     if lhs._prevKv != rhs._prevKv {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Etcdserverpb_DeleteRangeRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".DeleteRangeRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "key"),
+    2: .standard(proto: "range_end"),
+    3: .standard(proto: "prev_kv"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularBytesField(value: &self.key) }()
+      case 2: try { try decoder.decodeSingularBytesField(value: &self.rangeEnd) }()
+      case 3: try { try decoder.decodeSingularBoolField(value: &self.prevKv) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.key.isEmpty {
+      try visitor.visitSingularBytesField(value: self.key, fieldNumber: 1)
+    }
+    if !self.rangeEnd.isEmpty {
+      try visitor.visitSingularBytesField(value: self.rangeEnd, fieldNumber: 2)
+    }
+    if self.prevKv != false {
+      try visitor.visitSingularBoolField(value: self.prevKv, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Etcdserverpb_DeleteRangeRequest, rhs: Etcdserverpb_DeleteRangeRequest) -> Bool {
+    if lhs.key != rhs.key {return false}
+    if lhs.rangeEnd != rhs.rangeEnd {return false}
+    if lhs.prevKv != rhs.prevKv {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Etcdserverpb_DeleteRangeResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".DeleteRangeResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "header"),
+    2: .same(proto: "deleted"),
+    3: .standard(proto: "prev_kvs"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._header) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.deleted) }()
+      case 3: try { try decoder.decodeRepeatedMessageField(value: &self.prevKvs) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._header {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    if self.deleted != 0 {
+      try visitor.visitSingularInt64Field(value: self.deleted, fieldNumber: 2)
+    }
+    if !self.prevKvs.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.prevKvs, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Etcdserverpb_DeleteRangeResponse, rhs: Etcdserverpb_DeleteRangeResponse) -> Bool {
+    if lhs._header != rhs._header {return false}
+    if lhs.deleted != rhs.deleted {return false}
+    if lhs.prevKvs != rhs.prevKvs {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

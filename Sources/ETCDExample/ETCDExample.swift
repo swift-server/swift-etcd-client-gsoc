@@ -11,7 +11,6 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 //===----------------------------------------------------------------------===//
-
 import ETCD
 import NIO
 
@@ -24,6 +23,16 @@ struct Example {
             if let value = try await etcdClient.get("foo") {
                 if let stringValue = String(data: value, encoding: .utf8) {
                     print("Value is: \(stringValue)")
+                    try await etcdClient.delete("foo")
+                    print("Key deleted")
+                    
+                    // Trying to get the value again
+                    let deletedValue = try await etcdClient.get("foo")
+                    if deletedValue == nil {
+                        print("Key not found after deletion")
+                    } else {
+                        print("Value after deletion: \(deletedValue!)")
+                    }
                 } else {
                     print("Unable to get value")
                 }
