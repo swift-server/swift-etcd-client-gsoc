@@ -81,6 +81,7 @@ public final class EtcdClient: @unchecked Sendable {
     /// Fetch the value for a key from the ETCD server.
     ///
     /// - Parameter key: The key to fetch the value for. Parameter is of type String.
+    /// - Returns: A `Value` containing the fetched value, or `nil` if no value was found.
     public func get(_ key: String) async throws -> Data? {
         return try await get(key.utf8)
     }
