@@ -70,13 +70,13 @@ final class EtcdClientTests: XCTestCase {
         
         let fetchedValue = try await etcdClient.get(key)
         XCTAssertNotNil(fetchedValue)
-        XCTAssertEqual(String(data: fetchedValue!, encoding: .utf8), "testValue")
+        XCTAssertEqual(String(data: fetchedValue!, encoding: .utf8), value)
         
         let updatedValue = "updatedValue"
         try await etcdClient.put(key, value: updatedValue)
         
         let fetchedUpdatedValue = try await etcdClient.get(key)
         XCTAssertNotNil(fetchedUpdatedValue)
-        XCTAssertEqual(String(data: fetchedUpdatedValue!, encoding: .utf8), "updatedValue")
+        XCTAssertEqual(String(data: fetchedUpdatedValue!, encoding: .utf8), updatedValue)
     }
 }
