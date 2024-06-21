@@ -62,4 +62,21 @@ final class EtcdClientTests: XCTestCase {
         fetchedValue = try await etcdClient.get(key)
         XCTAssertNil(fetchedValue)
     }
+    
+    func testUpdateExistingKey() async throws {
+        let key = "testKey"
+        let value = "testValue"
+        try await etcdClient.set(key, value: value)
+        
+        let fetchedValue = try await etcdClient.get(key)
+        XCTAssertNotNil(fetchedValue)
+        XCTAssertEqual(String(data: fetchedValue!, encoding: .utf8), "testValue")
+        
+        let updatedValue = "updatedValue"
+        try await etcdClient.put(key, value: updatedValue)
+        
+        let fetchedUpdatedValue = try await etcdClient.get(key)
+        XCTAssertNotNil(fetchedUpdatedValue)
+        XCTAssertEqual(String(data: fetchedUpdatedValue!, encoding: .utf8), "updatedValue")
+    }
 }
