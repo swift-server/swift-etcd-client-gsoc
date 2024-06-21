@@ -102,4 +102,23 @@ public final class EtcdClient: @unchecked Sendable {
     public func delete(_ key: String) async throws {
         return try await delete(key.utf8)
     }
+    
+    /// Puts a value for a specified key in the ETCD server. If the key does not exist, a new key, value pair is created.
+    ///
+    /// - Parameters:
+    ///   - key: The key for which the value is to be put. Parameter is of type Sequence<UInt8>.
+    ///   - value: The ETCD value to put for the key. Parameter is of type Sequence<UInt8>.
+    public func put(_ key: some Sequence<UInt8>, value: some Sequence<UInt8>) async throws {
+        try await set(key, value: value)
+    }
+    
+    /// Puts a value for a specified key in the ETCD server.  If the key does not exist, a new key, value pair is created.
+    ///
+    /// - Parameters:
+    ///   - key: The key for which the value is to be put. Parameter is of type String.
+    ///   - value: The ETCD value to put for the key. Parameter is of type String.
+    public func put(_ key: String, value: String) async throws {
+        try await put(key.utf8, value: value.utf8)
+    }
+
 }
