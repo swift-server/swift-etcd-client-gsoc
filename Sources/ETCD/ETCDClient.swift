@@ -23,6 +23,8 @@ public final class EtcdClient: @unchecked Sendable {
     private var group: EventLoopGroup
     private var connection: ClientConnection
     private var client: Etcdserverpb_KVNIOClient
+    private var watchClient: Etcdserverpb_WatchNIOClient
+
 
     /// Initialize a new ETCD Connection.
     ///
@@ -37,6 +39,7 @@ public final class EtcdClient: @unchecked Sendable {
         self.connection = ClientConnection.insecure(group: self.group)
             .connect(host: host, port: port)
         self.client = Etcdserverpb_KVNIOClient(channel: self.connection)
+        self.watchClient = Etcdserverpb_WatchNIOClient(channel: self.connection)
     }
 
     /// Sets a value for a specified key in the ETCD server.
@@ -119,6 +122,48 @@ public final class EtcdClient: @unchecked Sendable {
     ///   - value: The ETCD value to put for the key. Parameter is of type String.
     public func put(_ key: String, value: String) async throws {
         try await put(key.utf8, value: value.utf8)
+    }
+    
+    public func watch<Result>(_ key: some Sequence<UInt8>, _ operation: @escaping (WatchAsyncSequence) async throws -> Result) async throws -> Result {
+
+        var watchCreateRequest = Etcdserverpb_WatchCreateRequest()
+        watchCreateRequest.key = Data(key)
+        var watchRequest = Etcdserverpb_WatchRequest()
+        watchRequest.createRequest = watchCreateRequest
+        
+        // watchClient.watch
+        
+//        let watchAsyncSequence = WatchAsyncSequence(grpcAsyncSequence)
+        
+        return try await operation(watchAsyncSequence)
+    }
+
+    public struct WatchAsyncSequence: AsyncSequence {
+        public typealias Element = Etcdserverpb_WatchResponse
+        private let grpcAsyncSequence: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>
+        
+        public init(grpcAsyncSequence: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>) {
+            self.grpcAsyncSequence = grpcAsyncSequence
+        }
+        
+        public func makeAsyncIterator() -> AsyncIterator {
+            return AsyncIterator(grpcIterator: grpcAsyncSequence.makeAsyncIterator())
+        }
+        
+        public struct AsyncIterator: AsyncIteratorProtocol {
+            private var grpcIterator: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>.AsyncIterator
+            
+            init(grpcIterator: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>.AsyncIterator) {
+                self.grpcIterator = grpcIterator
+            }
+            
+            public mutating func next() async throws -> Etcdserverpb_WatchResponse? {
+                guard let response = try await grpcIterator.next() else {
+                    return nil
+                }
+                return response
+            }
+        }
     }
 
 }
