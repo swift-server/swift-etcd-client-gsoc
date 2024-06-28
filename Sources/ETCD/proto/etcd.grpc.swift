@@ -321,6 +321,204 @@ internal enum Etcdserverpb_KVClientMetadata {
   }
 }
 
+/// Usage: instantiate `Etcdserverpb_WatchClient`, then call methods of this protocol to make API calls.
+internal protocol Etcdserverpb_WatchClientProtocol: GRPCClient {
+  var serviceName: String { get }
+  var interceptors: Etcdserverpb_WatchClientInterceptorFactoryProtocol? { get }
+
+  func watch(
+    callOptions: CallOptions?,
+    handler: @escaping (Etcdserverpb_WatchResponse) -> Void
+  ) -> BidirectionalStreamingCall<Etcdserverpb_WatchRequest, Etcdserverpb_WatchResponse>
+}
+
+extension Etcdserverpb_WatchClientProtocol {
+  internal var serviceName: String {
+    return "etcdserverpb.Watch"
+  }
+
+  /// Watch watches for events happening or that have happened. Both input and output
+  /// are streams; the input stream is for creating and canceling watchers and the output
+  /// stream sends events. One watch RPC can watch on multiple key ranges, streaming events
+  /// for several watches at once. The entire event history can be watched starting from the
+  /// last compaction revision.
+  ///
+  /// Callers should use the `send` method on the returned object to send messages
+  /// to the server. The caller should send an `.end` after the final message has been sent.
+  ///
+  /// - Parameters:
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ClientStreamingCall` with futures for the metadata and status.
+  internal func watch(
+    callOptions: CallOptions? = nil,
+    handler: @escaping (Etcdserverpb_WatchResponse) -> Void
+  ) -> BidirectionalStreamingCall<Etcdserverpb_WatchRequest, Etcdserverpb_WatchResponse> {
+    return self.makeBidirectionalStreamingCall(
+      path: Etcdserverpb_WatchClientMetadata.Methods.watch.path,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeWatchInterceptors() ?? [],
+      handler: handler
+    )
+  }
+}
+
+@available(*, deprecated)
+extension Etcdserverpb_WatchClient: @unchecked Sendable {}
+
+@available(*, deprecated, renamed: "Etcdserverpb_WatchNIOClient")
+internal final class Etcdserverpb_WatchClient: Etcdserverpb_WatchClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Etcdserverpb_WatchClientInterceptorFactoryProtocol?
+  internal let channel: GRPCChannel
+  internal var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  internal var interceptors: Etcdserverpb_WatchClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
+
+  /// Creates a client for the etcdserverpb.Watch service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  internal init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Etcdserverpb_WatchClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
+}
+
+internal struct Etcdserverpb_WatchNIOClient: Etcdserverpb_WatchClientProtocol {
+  internal var channel: GRPCChannel
+  internal var defaultCallOptions: CallOptions
+  internal var interceptors: Etcdserverpb_WatchClientInterceptorFactoryProtocol?
+
+  /// Creates a client for the etcdserverpb.Watch service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  internal init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Etcdserverpb_WatchClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+internal protocol Etcdserverpb_WatchAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Etcdserverpb_WatchClientInterceptorFactoryProtocol? { get }
+
+  func makeWatchCall(
+    callOptions: CallOptions?
+  ) -> GRPCAsyncBidirectionalStreamingCall<Etcdserverpb_WatchRequest, Etcdserverpb_WatchResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Etcdserverpb_WatchAsyncClientProtocol {
+  internal static var serviceDescriptor: GRPCServiceDescriptor {
+    return Etcdserverpb_WatchClientMetadata.serviceDescriptor
+  }
+
+  internal var interceptors: Etcdserverpb_WatchClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  internal func makeWatchCall(
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncBidirectionalStreamingCall<Etcdserverpb_WatchRequest, Etcdserverpb_WatchResponse> {
+    return self.makeAsyncBidirectionalStreamingCall(
+      path: Etcdserverpb_WatchClientMetadata.Methods.watch.path,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeWatchInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Etcdserverpb_WatchAsyncClientProtocol {
+  internal func watch<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Etcdserverpb_WatchResponse> where RequestStream: Sequence, RequestStream.Element == Etcdserverpb_WatchRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Etcdserverpb_WatchClientMetadata.Methods.watch.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeWatchInterceptors() ?? []
+    )
+  }
+
+  internal func watch<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Etcdserverpb_WatchResponse> where RequestStream: AsyncSequence & Sendable, RequestStream.Element == Etcdserverpb_WatchRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Etcdserverpb_WatchClientMetadata.Methods.watch.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeWatchInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+internal struct Etcdserverpb_WatchAsyncClient: Etcdserverpb_WatchAsyncClientProtocol {
+  internal var channel: GRPCChannel
+  internal var defaultCallOptions: CallOptions
+  internal var interceptors: Etcdserverpb_WatchClientInterceptorFactoryProtocol?
+
+  internal init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Etcdserverpb_WatchClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+internal protocol Etcdserverpb_WatchClientInterceptorFactoryProtocol: Sendable {
+
+  /// - Returns: Interceptors to use when invoking 'watch'.
+  func makeWatchInterceptors() -> [ClientInterceptor<Etcdserverpb_WatchRequest, Etcdserverpb_WatchResponse>]
+}
+
+internal enum Etcdserverpb_WatchClientMetadata {
+  internal static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "Watch",
+    fullName: "etcdserverpb.Watch",
+    methods: [
+      Etcdserverpb_WatchClientMetadata.Methods.watch,
+    ]
+  )
+
+  internal enum Methods {
+    internal static let watch = GRPCMethodDescriptor(
+      name: "Watch",
+      path: "/etcdserverpb.Watch/Watch",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+  }
+}
+
 /// To build a server, implement a class that conforms to this protocol.
 internal protocol Etcdserverpb_KVProvider: CallHandlerProvider {
   var interceptors: Etcdserverpb_KVServerInterceptorFactoryProtocol? { get }
@@ -508,6 +706,121 @@ internal enum Etcdserverpb_KVServerMetadata {
       name: "DeleteRange",
       path: "/etcdserverpb.KV/DeleteRange",
       type: GRPCCallType.unary
+    )
+  }
+}
+/// To build a server, implement a class that conforms to this protocol.
+internal protocol Etcdserverpb_WatchProvider: CallHandlerProvider {
+  var interceptors: Etcdserverpb_WatchServerInterceptorFactoryProtocol? { get }
+
+  /// Watch watches for events happening or that have happened. Both input and output
+  /// are streams; the input stream is for creating and canceling watchers and the output
+  /// stream sends events. One watch RPC can watch on multiple key ranges, streaming events
+  /// for several watches at once. The entire event history can be watched starting from the
+  /// last compaction revision.
+  func watch(context: StreamingResponseCallContext<Etcdserverpb_WatchResponse>) -> EventLoopFuture<(StreamEvent<Etcdserverpb_WatchRequest>) -> Void>
+}
+
+extension Etcdserverpb_WatchProvider {
+  internal var serviceName: Substring {
+    return Etcdserverpb_WatchServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  internal func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "Watch":
+      return BidirectionalStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Etcdserverpb_WatchRequest>(),
+        responseSerializer: ProtobufSerializer<Etcdserverpb_WatchResponse>(),
+        interceptors: self.interceptors?.makeWatchInterceptors() ?? [],
+        observerFactory: self.watch(context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+internal protocol Etcdserverpb_WatchAsyncProvider: CallHandlerProvider, Sendable {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Etcdserverpb_WatchServerInterceptorFactoryProtocol? { get }
+
+  /// Watch watches for events happening or that have happened. Both input and output
+  /// are streams; the input stream is for creating and canceling watchers and the output
+  /// stream sends events. One watch RPC can watch on multiple key ranges, streaming events
+  /// for several watches at once. The entire event history can be watched starting from the
+  /// last compaction revision.
+  func watch(
+    requestStream: GRPCAsyncRequestStream<Etcdserverpb_WatchRequest>,
+    responseStream: GRPCAsyncResponseStreamWriter<Etcdserverpb_WatchResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Etcdserverpb_WatchAsyncProvider {
+  internal static var serviceDescriptor: GRPCServiceDescriptor {
+    return Etcdserverpb_WatchServerMetadata.serviceDescriptor
+  }
+
+  internal var serviceName: Substring {
+    return Etcdserverpb_WatchServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  internal var interceptors: Etcdserverpb_WatchServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  internal func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "Watch":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Etcdserverpb_WatchRequest>(),
+        responseSerializer: ProtobufSerializer<Etcdserverpb_WatchResponse>(),
+        interceptors: self.interceptors?.makeWatchInterceptors() ?? [],
+        wrapping: { try await self.watch(requestStream: $0, responseStream: $1, context: $2) }
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+internal protocol Etcdserverpb_WatchServerInterceptorFactoryProtocol: Sendable {
+
+  /// - Returns: Interceptors to use when handling 'watch'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeWatchInterceptors() -> [ServerInterceptor<Etcdserverpb_WatchRequest, Etcdserverpb_WatchResponse>]
+}
+
+internal enum Etcdserverpb_WatchServerMetadata {
+  internal static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "Watch",
+    fullName: "etcdserverpb.Watch",
+    methods: [
+      Etcdserverpb_WatchServerMetadata.Methods.watch,
+    ]
+  )
+
+  internal enum Methods {
+    internal static let watch = GRPCMethodDescriptor(
+      name: "Watch",
+      path: "/etcdserverpb.Watch/Watch",
+      type: GRPCCallType.bidirectionalStreaming
     )
   }
 }
