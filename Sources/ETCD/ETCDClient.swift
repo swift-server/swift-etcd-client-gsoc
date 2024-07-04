@@ -124,46 +124,32 @@ public final class EtcdClient: @unchecked Sendable {
         try await put(key.utf8, value: value.utf8)
     }
     
-    public func watch<Result>(_ key: some Sequence<UInt8>, _ operation: @escaping (WatchAsyncSequence) async throws -> Result) async throws -> Result {
-
+    public func watch(key: some Sequence<UInt8>, operation: @escaping ([String: String]) -> Void) {
         var watchCreateRequest = Etcdserverpb_WatchCreateRequest()
         watchCreateRequest.key = Data(key)
+        
         var watchRequest = Etcdserverpb_WatchRequest()
         watchRequest.createRequest = watchCreateRequest
         
-        // watchClient.watch
-        
-//        let watchAsyncSequence = WatchAsyncSequence(grpcAsyncSequence)
-        
-        return try await operation(watchAsyncSequence)
-    }
-
-    public struct WatchAsyncSequence: AsyncSequence {
-        public typealias Element = Etcdserverpb_WatchResponse
-        private let grpcAsyncSequence: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>
-        
-        public init(grpcAsyncSequence: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>) {
-            self.grpcAsyncSequence = grpcAsyncSequence
-        }
-        
-        public func makeAsyncIterator() -> AsyncIterator {
-            return AsyncIterator(grpcIterator: grpcAsyncSequence.makeAsyncIterator())
-        }
-        
-        public struct AsyncIterator: AsyncIteratorProtocol {
-            private var grpcIterator: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>.AsyncIterator
+        let callOptions: CallOptions? = nil
+        let call = watchClient.watch(callOptions: callOptions) { (response: Etcdserverpb_WatchResponse) in
+            var result = [String: String]()
             
-            init(grpcIterator: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>.AsyncIterator) {
-                self.grpcIterator = grpcIterator
-            }
-            
-            public mutating func next() async throws -> Etcdserverpb_WatchResponse? {
-                guard let response = try await grpcIterator.next() else {
-                    return nil
+            for event in response.events {
+                if event.hasKv, let key = String(data: event.kv.key, encoding: .utf8),
+                   let value = String(data: event.kv.value, encoding: .utf8) {
+                    result[key] = value
                 }
-                return response
             }
+            
+            operation(result)
         }
-    }
 
+        call.sendMessage(watchRequest, promise: nil)
+        call.sendEnd(promise: nil)
+    }
+    
+    public func watch(key: String, operation: @escaping ([String: String]) -> Void) {
+        watch(key: key.utf8, operation: operation)
+    }
 }

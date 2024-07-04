@@ -79,4 +79,33 @@ final class EtcdClientTests: XCTestCase {
         XCTAssertNotNil(fetchedUpdatedValue)
         XCTAssertEqual(String(data: fetchedUpdatedValue!, encoding: .utf8), updatedValue)
     }
+    
+    func testWatch() async throws {
+        let key = "testKey"
+        let initialValue = "testValue"
+        
+        let updatedValue = "updatedValue"
+        let expectation = XCTestExpectation(description: "Watch for key updates")
+
+        try await etcdClient.set(key, value: initialValue)
+
+        etcdClient.watch(key: key) { keyValuePairs in
+            for (key, value) in keyValuePairs {
+                if value == updatedValue {
+                    expectation.fulfill()
+                }
+            }
+        }
+
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
+            Task {
+                do {
+                    try await self.etcdClient.set(key, value: updatedValue)
+                } catch {
+                    XCTFail("Error setting updated value: \(error)")
+                }
+            }
+        }
+        await fulfillment(of: [expectation], timeout: 5.0)
+    }
 }

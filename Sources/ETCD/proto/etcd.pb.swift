@@ -612,12 +612,96 @@ struct Etcdserverpb_WatchResponse {
   /// framgment is true if large watch response was split over multiple responses.
   var fragment: Bool = false
 
+  var events: [Etcdserverpb_Event] = []
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
 
   fileprivate var _header: Etcdserverpb_ResponseHeader? = nil
 }
+
+struct Etcdserverpb_Event {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// type is the kind of event. If type is a PUT, it indicates
+  /// new data has been stored to the key. If type is a DELETE,
+  /// it indicates the key was deleted.
+  var type: Etcdserverpb_Event.EventType = .put
+
+  /// kv holds the KeyValue for the event.
+  /// A PUT event contains current kv pair.
+  /// A PUT event with kv.Version=1 indicates the creation of a key.
+  /// A DELETE/EXPIRE event contains the deleted key with
+  /// its modification revision set to the revision of deletion.
+  var kv: Etcdserverpb_KeyValue {
+    get {return _kv ?? Etcdserverpb_KeyValue()}
+    set {_kv = newValue}
+  }
+  /// Returns true if `kv` has been explicitly set.
+  var hasKv: Bool {return self._kv != nil}
+  /// Clears the value of `kv`. Subsequent reads from it will return its default value.
+  mutating func clearKv() {self._kv = nil}
+
+  /// prev_kv holds the key-value pair before the event happens.
+  var prevKv: Etcdserverpb_KeyValue {
+    get {return _prevKv ?? Etcdserverpb_KeyValue()}
+    set {_prevKv = newValue}
+  }
+  /// Returns true if `prevKv` has been explicitly set.
+  var hasPrevKv: Bool {return self._prevKv != nil}
+  /// Clears the value of `prevKv`. Subsequent reads from it will return its default value.
+  mutating func clearPrevKv() {self._prevKv = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  enum EventType: SwiftProtobuf.Enum {
+    typealias RawValue = Int
+    case put // = 0
+    case delete // = 1
+    case UNRECOGNIZED(Int)
+
+    init() {
+      self = .put
+    }
+
+    init?(rawValue: Int) {
+      switch rawValue {
+      case 0: self = .put
+      case 1: self = .delete
+      default: self = .UNRECOGNIZED(rawValue)
+      }
+    }
+
+    var rawValue: Int {
+      switch self {
+      case .put: return 0
+      case .delete: return 1
+      case .UNRECOGNIZED(let i): return i
+      }
+    }
+
+  }
+
+  init() {}
+
+  fileprivate var _kv: Etcdserverpb_KeyValue? = nil
+  fileprivate var _prevKv: Etcdserverpb_KeyValue? = nil
+}
+
+#if swift(>=4.2)
+
+extension Etcdserverpb_Event.EventType: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static let allCases: [Etcdserverpb_Event.EventType] = [
+    .put,
+    .delete,
+  ]
+}
+
+#endif  // swift(>=4.2)
 
 #if swift(>=5.5) && canImport(_Concurrency)
 extension Etcdserverpb_KeyValue: @unchecked Sendable {}
@@ -637,6 +721,8 @@ extension Etcdserverpb_WatchCreateRequest.FilterType: @unchecked Sendable {}
 extension Etcdserverpb_WatchCancelRequest: @unchecked Sendable {}
 extension Etcdserverpb_WatchProgressRequest: @unchecked Sendable {}
 extension Etcdserverpb_WatchResponse: @unchecked Sendable {}
+extension Etcdserverpb_Event: @unchecked Sendable {}
+extension Etcdserverpb_Event.EventType: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -1357,6 +1443,7 @@ extension Etcdserverpb_WatchResponse: SwiftProtobuf.Message, SwiftProtobuf._Mess
     5: .standard(proto: "compact_revision"),
     6: .standard(proto: "cancel_reason"),
     7: .same(proto: "fragment"),
+    11: .same(proto: "events"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1372,6 +1459,7 @@ extension Etcdserverpb_WatchResponse: SwiftProtobuf.Message, SwiftProtobuf._Mess
       case 5: try { try decoder.decodeSingularInt64Field(value: &self.compactRevision) }()
       case 6: try { try decoder.decodeSingularStringField(value: &self.cancelReason) }()
       case 7: try { try decoder.decodeSingularBoolField(value: &self.fragment) }()
+      case 11: try { try decoder.decodeRepeatedMessageField(value: &self.events) }()
       default: break
       }
     }
@@ -1403,6 +1491,9 @@ extension Etcdserverpb_WatchResponse: SwiftProtobuf.Message, SwiftProtobuf._Mess
     if self.fragment != false {
       try visitor.visitSingularBoolField(value: self.fragment, fieldNumber: 7)
     }
+    if !self.events.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.events, fieldNumber: 11)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1414,7 +1505,63 @@ extension Etcdserverpb_WatchResponse: SwiftProtobuf.Message, SwiftProtobuf._Mess
     if lhs.compactRevision != rhs.compactRevision {return false}
     if lhs.cancelReason != rhs.cancelReason {return false}
     if lhs.fragment != rhs.fragment {return false}
+    if lhs.events != rhs.events {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
+}
+
+extension Etcdserverpb_Event: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".Event"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "type"),
+    2: .same(proto: "kv"),
+    3: .standard(proto: "prev_kv"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularEnumField(value: &self.type) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._kv) }()
+      case 3: try { try decoder.decodeSingularMessageField(value: &self._prevKv) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if self.type != .put {
+      try visitor.visitSingularEnumField(value: self.type, fieldNumber: 1)
+    }
+    try { if let v = self._kv {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try { if let v = self._prevKv {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Etcdserverpb_Event, rhs: Etcdserverpb_Event) -> Bool {
+    if lhs.type != rhs.type {return false}
+    if lhs._kv != rhs._kv {return false}
+    if lhs._prevKv != rhs._prevKv {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Etcdserverpb_Event.EventType: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "PUT"),
+    1: .same(proto: "DELETE"),
+  ]
 }
