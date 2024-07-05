@@ -23,7 +23,7 @@ public final class EtcdClient: @unchecked Sendable {
     private var group: EventLoopGroup
     private var connection: ClientConnection
     private var client: Etcdserverpb_KVNIOClient
-    private var watchClient: Etcdserverpb_WatchNIOClient
+    private var watchClient: Etcdserverpb_WatchAsyncClient
 
 
     /// Initialize a new ETCD Connection.
@@ -39,7 +39,7 @@ public final class EtcdClient: @unchecked Sendable {
         self.connection = ClientConnection.insecure(group: self.group)
             .connect(host: host, port: port)
         self.client = Etcdserverpb_KVNIOClient(channel: self.connection)
-        self.watchClient = Etcdserverpb_WatchNIOClient(channel: self.connection)
+        self.watchClient = Etcdserverpb_WatchAsyncClient(channel: self.connection)
     }
 
     /// Sets a value for a specified key in the ETCD server.
@@ -124,32 +124,42 @@ public final class EtcdClient: @unchecked Sendable {
         try await put(key.utf8, value: value.utf8)
     }
     
-    public func watch(key: some Sequence<UInt8>, operation: @escaping ([String: String]) -> Void) {
-        var watchCreateRequest = Etcdserverpb_WatchCreateRequest()
-        watchCreateRequest.key = Data(key)
-        
-        var watchRequest = Etcdserverpb_WatchRequest()
-        watchRequest.createRequest = watchCreateRequest
-        
-        let callOptions: CallOptions? = nil
-        let call = watchClient.watch(callOptions: callOptions) { (response: Etcdserverpb_WatchResponse) in
-            var result = [String: String]()
-            
-            for event in response.events {
-                if event.hasKv, let key = String(data: event.kv.key, encoding: .utf8),
-                   let value = String(data: event.kv.value, encoding: .utf8) {
-                    result[key] = value
-                }
-            }
-            
-            operation(result)
-        }
-
-        call.sendMessage(watchRequest, promise: nil)
-        call.sendEnd(promise: nil)
+    public func watch<Result>(_ key: some Sequence<UInt8>, _ operation: (WatchAsyncSequence) async throws -> Result) async throws -> Result {
+           let request = [Etcdserverpb_WatchRequest.with { $0.createRequest.key = Data(key) }]
+           let watchAsyncSequence = WatchAsyncSequence(watchClient.watch(request))
+           return try await operation(watchAsyncSequence)
     }
     
-    public func watch(key: String, operation: @escaping ([String: String]) -> Void) {
-        watch(key: key.utf8, operation: operation)
+    public func watch<Result>(_ key: String, _ operation: (WatchAsyncSequence) async throws -> Result) async throws -> Result {
+        let request = [Etcdserverpb_WatchRequest.with { $0.createRequest.key = Data(key.utf8) }]
+           let watchAsyncSequence = WatchAsyncSequence(watchClient.watch(request))
+           return try await operation(watchAsyncSequence)
+    }
+}
+
+public struct WatchAsyncSequence: AsyncSequence, AsyncIteratorProtocol {
+    public typealias Element = Data
+    let grpcAsyncSequence: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>
+    var grpcIterator: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>.AsyncIterator
+
+    init(_ grpcAsyncSequence: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>) {
+        self.grpcAsyncSequence = grpcAsyncSequence
+        self.grpcIterator = grpcAsyncSequence.makeAsyncIterator()
+    }
+
+    public func makeAsyncIterator() -> WatchAsyncSequence {
+        self
+    }
+    
+    public mutating func next() async -> Element? {
+        do {
+            guard let response = try await self.grpcIterator.next() else {
+                return nil
+            }
+            let element = try response.serializedData()
+            return element
+        } catch {
+            return nil
+        }
     }
 }
