@@ -131,14 +131,78 @@ public final class EtcdClient: @unchecked Sendable {
     }
     
     public func watch<Result>(_ key: String, _ operation: (WatchAsyncSequence) async throws -> Result) async throws -> Result {
-        let request = [Etcdserverpb_WatchRequest.with { $0.createRequest.key = Data(key.utf8) }]
-           let watchAsyncSequence = WatchAsyncSequence(watchClient.watch(request))
-           return try await operation(watchAsyncSequence)
+        try await self.watch(key.utf8, operation)
     }
 }
 
+public enum EventType {
+    case put
+    case delete
+
+    init(protoType: Int) {
+        switch protoType {
+        case 0:
+            self = .put
+        case 1:
+            self = .delete
+        default:
+            fatalError("Unsupported event type")
+        }
+    }
+
+    var protoType: Int {
+        switch self {
+        case .put:
+            return 0
+        case .delete:
+            return 1
+        }
+    }
+}
+
+public struct KeyValue {
+    public var key: Data
+    public var createRevision: Int64
+    public var modRevision: Int64
+    public var version: Int64
+    public var value: Data
+    public var lease: Int64
+
+    init(protoKeyValue: Etcdserverpb_KeyValue) {
+        self.key = protoKeyValue.key
+        self.createRevision = protoKeyValue.createRevision
+        self.modRevision = protoKeyValue.modRevision
+        self.version = protoKeyValue.version
+        self.value = protoKeyValue.value
+        self.lease = protoKeyValue.lease
+    }
+}
+
+
+public struct WatchEvent {
+    public var kv: KeyValue
+    public var prevKV: KeyValue?
+    private let eventTypeRaw: Int
+
+    init(protoEvent: Etcdserverpb_Event) {
+        print(protoEvent)
+        self.eventTypeRaw = protoEvent.type.rawValue
+        self.kv = KeyValue(protoKeyValue: protoEvent.kv)
+        if let protoPrevKV = protoEvent.hasPrevKv ? protoEvent.prevKv : nil {
+            self.prevKV = KeyValue(protoKeyValue: protoPrevKV)
+        } else {
+            self.prevKV = nil
+        }
+    }
+
+    public func eventType() -> EventType {
+        return EventType(protoType: self.eventTypeRaw)
+    }
+}
+
+
 public struct WatchAsyncSequence: AsyncSequence, AsyncIteratorProtocol {
-    public typealias Element = Data
+    public typealias Element = WatchEvent
     let grpcAsyncSequence: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>
     var grpcIterator: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>.AsyncIterator
 
@@ -150,14 +214,19 @@ public struct WatchAsyncSequence: AsyncSequence, AsyncIteratorProtocol {
     public func makeAsyncIterator() -> WatchAsyncSequence {
         self
     }
-    
+
     public mutating func next() async -> Element? {
         do {
             guard let response = try await self.grpcIterator.next() else {
                 return nil
             }
-            let element = try response.serializedData()
-            return element
+
+            let events = response.events
+            if let event = events.first {
+                let watchEvent = WatchEvent(protoEvent: event)
+                return watchEvent
+            }
+            return nil
         } catch {
             return nil
         }
