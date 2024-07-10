@@ -21,9 +21,22 @@ struct Example {
         let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1)
         do {
             let etcdClient = EtcdClient(host: "localhost", port: 2379, eventLoopGroup: eventLoopGroup)
-            etcdClient.watch(key: "foo") { keyValuePairs in
-                for (key, value) in keyValuePairs {
-                    print("Watch response: Key = \(key), Value = \(value)")
+            Task {
+                do {
+                    try await etcdClient.watch("foo") { sequence in
+                        var iterator = sequence.makeAsyncIterator()
+                        while let event = try await iterator.next() {
+                            switch event.eventType() {
+                            case .put:
+                                let value = String(data: event.kv.value, encoding: .utf8) ?? "Invalid data"
+                                print("PUT")
+                            case .delete:
+                                print("DELETE")
+                            }
+                        }
+                    }
+                } catch {
+                    print("Error watching key: \(error)")
                 }
             }
             
