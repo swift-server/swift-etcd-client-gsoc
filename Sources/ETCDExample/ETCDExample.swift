@@ -26,13 +26,7 @@ struct Example {
                     try await etcdClient.watch("foo") { sequence in
                         var iterator = sequence.makeAsyncIterator()
                         while let event = try await iterator.next() {
-                            switch event.eventType() {
-                            case .put:
-                                let value = String(data: event.kv.value, encoding: .utf8) ?? "Invalid data"
-                                print("PUT")
-                            case .delete:
-                                print("DELETE")
-                            }
+                            print(event)
                         }
                     }
                 } catch {

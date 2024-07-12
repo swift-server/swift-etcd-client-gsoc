@@ -126,7 +126,7 @@ public final class EtcdClient: @unchecked Sendable {
     
     public func watch<Result>(_ key: some Sequence<UInt8>, _ operation: (WatchAsyncSequence) async throws -> Result) async throws -> Result {
            let request = [Etcdserverpb_WatchRequest.with { $0.createRequest.key = Data(key) }]
-           let watchAsyncSequence = WatchAsyncSequence(watchClient.watch(request))
+        let watchAsyncSequence = WatchAsyncSequence(grpcAsyncSequence: watchClient.watch(request))
            return try await operation(watchAsyncSequence)
     }
     
@@ -182,11 +182,8 @@ public struct KeyValue {
 public struct WatchEvent {
     public var kv: KeyValue
     public var prevKV: KeyValue?
-    private let eventTypeRaw: Int
 
     init(protoEvent: Etcdserverpb_Event) {
-        print(protoEvent)
-        self.eventTypeRaw = protoEvent.type.rawValue
         self.kv = KeyValue(protoKeyValue: protoEvent.kv)
         if let protoPrevKV = protoEvent.hasPrevKv ? protoEvent.prevKv : nil {
             self.prevKV = KeyValue(protoKeyValue: protoPrevKV)
@@ -194,41 +191,51 @@ public struct WatchEvent {
             self.prevKV = nil
         }
     }
-
-    public func eventType() -> EventType {
-        return EventType(protoType: self.eventTypeRaw)
-    }
 }
 
 
-public struct WatchAsyncSequence: AsyncSequence, AsyncIteratorProtocol {
-    public typealias Element = WatchEvent
-    let grpcAsyncSequence: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>
-    var grpcIterator: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>.AsyncIterator
+public struct WatchAsyncSequence: AsyncSequence {
+    public typealias Element = [WatchEvent]
 
-    init(_ grpcAsyncSequence: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>) {
+    private let grpcAsyncSequence: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>
+
+    init(grpcAsyncSequence: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>) {
         self.grpcAsyncSequence = grpcAsyncSequence
-        self.grpcIterator = grpcAsyncSequence.makeAsyncIterator()
     }
 
-    public func makeAsyncIterator() -> WatchAsyncSequence {
-        self
+    public func makeAsyncIterator() -> AsyncIterator {
+        .init(grpcIterator: self.grpcAsyncSequence.makeAsyncIterator())
     }
 
-    public mutating func next() async -> Element? {
-        do {
-            guard let response = try await self.grpcIterator.next() else {
-                return nil
-            }
+    public struct AsyncIterator: AsyncIteratorProtocol {
+        private var grpcIterator: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>.AsyncIterator?
 
-            let events = response.events
-            if let event = events.first {
-                let watchEvent = WatchEvent(protoEvent: event)
-                return watchEvent
+        fileprivate init(grpcIterator: GRPCAsyncResponseStream<Etcdserverpb_WatchResponse>.AsyncIterator) {
+            self.grpcIterator = grpcIterator
+        }
+
+        public mutating func next() async throws -> Element? {
+            while true {
+                guard let response = try await self.grpcIterator?.next() else {
+                    return nil
+                }
+
+                if response.created {
+                    // We receive this after setting up the watch and need to wait for the next
+                    // response that contains an event
+                    precondition(response.events.isEmpty, "Expected no watch events on created response")
+                    continue
+                }
+
+                if response.canceled {
+                    // We got cancelled and have to return nil now
+                    self.grpcIterator = nil
+                    return nil
+                }
+
+                let events = response.events.map { WatchEvent(protoEvent: $0) }
+                return events
             }
-            return nil
-        } catch {
-            return nil
         }
     }
 }

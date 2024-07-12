@@ -82,30 +82,36 @@ final class EtcdClientTests: XCTestCase {
     
     func testWatch() async throws {
         let key = "testKey"
-        let initialValue = "testValue"
+        let value = "testValue".data(using: .utf8)!
+
+    
+        try await etcdClient.put(key, value: "foo")
+            
+        let watchTask = Task {
+            try await etcdClient.watch(key) { watchAsyncSequence in
+                var iterator = watchAsyncSequence.makeAsyncIterator()
+                    let events = try await iterator.next()
+                    guard let events = events else {
+                        XCTFail("No event received for key: \(key)")
+                        return
+                    }
+
+                    for event in events {
+                        if event.kv.key == key.data(using: .utf8) {
+                            XCTAssertEqual(event.kv.value, value)
+                            return
+                        }
+                    }
+
+                    XCTFail("No matching event received for key: \(key)")
+                }
+            }
+
+        // Delay to ensure watch task is running
+        try await Task.sleep(nanoseconds: 1_000_000_000)
         
-        let updatedValue = "updatedValue"
-        let expectation = XCTestExpectation(description: "Watch for key updates")
-
-        try await etcdClient.set(key, value: initialValue)
-
-        etcdClient.watch(key: key) { keyValuePairs in
-            for (key, value) in keyValuePairs {
-                if value == updatedValue {
-                    expectation.fulfill()
-                }
-            }
-        }
-
-        DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
-            Task {
-                do {
-                    try await self.etcdClient.set(key, value: updatedValue)
-                } catch {
-                    XCTFail("Error setting updated value: \(error)")
-                }
-            }
-        }
-        await fulfillment(of: [expectation], timeout: 5.0)
+        try await etcdClient.put(key, value: String(data: value, encoding: .utf8)!)
+        
+        _ = try await watchTask.value
     }
 }
