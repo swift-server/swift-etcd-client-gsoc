@@ -17,6 +17,16 @@ import GRPC
 import NIO
 import SwiftProtobuf
 
+public struct KeyValue {
+    public let key: Data
+    public let value: Data
+
+    init(from internalKV: Etcdserverpb_KeyValue) {
+        self.key = internalKV.key
+        self.value = internalKV.value
+    }
+}
+
 public final class EtcdClient: @unchecked Sendable {
     private let host: String
     private let port: Int
@@ -65,25 +75,26 @@ public final class EtcdClient: @unchecked Sendable {
     ///
     /// - Parameter key: The key to fetch the value for. Parameter is of type Sequence<UInt8>.
     /// - Returns: A `Value` containing the fetched value, or `nil` if no value was found.
-    public func get(_ key: some Sequence<UInt8>) async throws -> Data? {
-        var rangeRequest = Etcdserverpb_RangeRequest()
-        rangeRequest.key = Data(key)
+    public func get(key: Data, endKey: Data? = nil) async throws -> [KeyValue] {
+       var rangeRequest = Etcdserverpb_RangeRequest()
+       rangeRequest.key = key
+       
+       if let endKey = endKey {
+           rangeRequest.rangeEnd = endKey
+       }
 
-        let call = client.range(rangeRequest)
-        let response = try await call.response.get()
-        
-        guard let kv = response.kvs.first else {
-            return nil
-        }
-        return kv.value
+       let call = client.range(rangeRequest)
+       let response = try await call.response.get()
+       
+       return response.kvs.map { KeyValue(from: $0) }
     }
     
     /// Fetch the value for a key from the ETCD server.
     ///
     /// - Parameter key: The key to fetch the value for. Parameter is of type String.
     /// - Returns: A `Value` containing the fetched value, or `nil` if no value was found.
-    public func get(_ key: String) async throws -> Data? {
-        return try await get(key.utf8)
+    public func get(key: String, endKey: String? = nil) async throws -> [KeyValue] {
+        return try await get(key: Data(key.utf8), endKey: endKey != nil ? Data(endKey!.utf8) : nil)
     }
     
     /// Delete the value for a key from the ETCD server.
