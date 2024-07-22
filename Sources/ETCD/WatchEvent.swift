@@ -16,20 +16,20 @@ import Foundation
 
 /// Struct representing a watch event in etcd.
 public struct WatchEvent {
-    public var kv: KeyValue
-    public var prevKV: KeyValue?
+    public var keyValue: KeyValue
+    public var previousKeyValue: KeyValue?
 
     init(protoEvent: Etcdserverpb_Event) {
-        self.kv = KeyValue(protoKeyValue: protoEvent.kv)
+        self.keyValue = KeyValue(protoKeyValue: protoEvent.kv)
         if let protoPrevKV = protoEvent.hasPrevKv ? protoEvent.prevKv : nil {
-            self.prevKV = KeyValue(protoKeyValue: protoPrevKV)
+            self.previousKeyValue = KeyValue(protoKeyValue: protoPrevKV)
         } else {
-            self.prevKV = nil
+            self.previousKeyValue = nil
         }
     }
     
     init(kv: KeyValue, prevKV: KeyValue?) {
-        self.kv = kv
-        self.prevKV = prevKV
+        self.keyValue = kv
+        self.previousKeyValue = prevKV
     }
 }
