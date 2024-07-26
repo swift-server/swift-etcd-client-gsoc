@@ -32,12 +32,21 @@ public struct KeyValue {
         self.lease = Int(protoKeyValue.lease)
     }
     
-    init(key: Data, createRevision: Int64, modRevision: Int64, version: Int64, value: Data, lease: Int64) {
+    /// Initialize a new KeyValue.
+    ///
+    /// - Parameters:
+    ///   - key: key in bytes. An empty key is not allowed.
+    ///   - create_revision: revision of the last creation on the key.
+    ///   - mod_revision: revision of the last modification on the key.
+    ///   - version: version is the version of the key. A deletion resets the version to zero and any modification of the key increases its version.
+    ///   - value: value in bytes.
+    ///   - lease: the ID of the lease attached to the key. If lease is 0, then no lease is attached to the key.
+    public init(key: Data, createRevision: Int, modRevision: Int, version: Int, value: Data, lease: Int) {
         self.key = key
-        self.createRevision = Int(createRevision)
-        self.modRevision = Int(modRevision)
-        self.version = Int(version)
+        self.createRevision = createRevision
+        self.modRevision = modRevision
+        self.version = version
         self.value = value
-        self.lease = Int(lease)
+        self.lease = lease
     }
 }

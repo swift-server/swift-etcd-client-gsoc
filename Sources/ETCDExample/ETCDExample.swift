@@ -57,16 +57,12 @@ struct Example {
                 } else {
                     print("Key not found")
                 }
-                DispatchQueue.global().asyncAfter(deadline: .now() + 5) {
-                    Task {
-                        do {
-                            try await etcdClient.set("foo", value: "updated_value")
-                        } catch {
-                            print("Error setting updated value: \(error)")
-                        }
-                    }
+                try await Task.sleep(for: .seconds(2))
+                do {
+                    try await etcdClient.set("foo", value: "updated_value")
+                } catch {
+                    print("Error setting updated value: \(error)")
                 }
-                try await eventLoopGroup.next().makePromise(of: Void.self).futureResult.get()
             }
         } catch {
             print("Error: \(error)")

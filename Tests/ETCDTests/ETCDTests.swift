@@ -84,12 +84,12 @@ final class EtcdClientTests: XCTestCase {
         let key = "testKey"
         let value = "testValue".data(using: .utf8)!
 
-    
         try await etcdClient.put(key, value: "foo")
-            
-        let watchTask = Task {
-            try await etcdClient.watch(key) { watchAsyncSequence in
-                var iterator = watchAsyncSequence.makeAsyncIterator()
+
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            group.addTask {
+                try await self.etcdClient.watch(key) { watchAsyncSequence in
+                    var iterator = watchAsyncSequence.makeAsyncIterator()
                     let events = try await iterator.next()
                     guard let events = events else {
                         XCTFail("No event received for key: \(key)")
@@ -97,8 +97,8 @@ final class EtcdClientTests: XCTestCase {
                     }
 
                     for event in events {
-                        if event.kv.key == key.data(using: .utf8) {
-                            XCTAssertEqual(event.kv.value, value)
+                        if event.keyValue.key == key.data(using: .utf8) {
+                            XCTAssertEqual(event.keyValue.value, value)
                             return
                         }
                     }
@@ -107,11 +107,15 @@ final class EtcdClientTests: XCTestCase {
                 }
             }
 
-        // Delay to ensure watch task is running
-        try await Task.sleep(nanoseconds: 1_000_000_000)
-        
-        try await etcdClient.put(key, value: String(data: value, encoding: .utf8)!)
-        
-        _ = try await watchTask.value
+            group.addTask {
+                try await Task.sleep(nanoseconds: 1_000_000_000)
+            }
+
+            group.addTask {
+                try await self.etcdClient.put(key, value: String(data: value, encoding: .utf8)!)
+            }
+
+            for try await _ in group {}
+        }
     }
 }

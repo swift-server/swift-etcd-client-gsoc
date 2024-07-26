@@ -25,7 +25,6 @@ public final class EtcdClient: @unchecked Sendable {
     private var client: Etcdserverpb_KVNIOClient
     private var watchClient: Etcdserverpb_WatchAsyncClient
 
-
     /// Initialize a new ETCD Connection.
     ///
     /// - Parameters:

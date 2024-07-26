@@ -14,7 +14,6 @@
 
 import Foundation
 
-/// Struct representing a watch event in etcd.
 public struct WatchEvent {
     public var keyValue: KeyValue
     public var previousKeyValue: KeyValue?
@@ -28,8 +27,13 @@ public struct WatchEvent {
         }
     }
     
-    init(kv: KeyValue, prevKV: KeyValue?) {
-        self.keyValue = kv
-        self.previousKeyValue = prevKV
+    /// Struct representing a watch event in etcd.
+    ///
+    /// - Parameters:
+    ///   - keyValue: keyValue representing a KeyValue to watch.
+    ///   - previousKeyValue: previousKeyValue representing a KeyValue that was previously received.
+    public init(keyValue: KeyValue, previousKeyValue: KeyValue?) {
+        self.keyValue = keyValue
+        self.previousKeyValue = previousKeyValue
     }
 }
