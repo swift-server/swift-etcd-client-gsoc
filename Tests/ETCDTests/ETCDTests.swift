@@ -107,15 +107,9 @@ final class EtcdClientTests: XCTestCase {
                 }
             }
 
-            group.addTask {
-                try await Task.sleep(nanoseconds: 1_000_000_000)
-            }
-
-            group.addTask {
-                try await self.etcdClient.put(key, value: String(data: value, encoding: .utf8)!)
-            }
-
-            for try await _ in group {}
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+            try await self.etcdClient.put(key, value: String(data: value, encoding: .utf8)!)
+            group.cancelAll()
         }
     }
 }
