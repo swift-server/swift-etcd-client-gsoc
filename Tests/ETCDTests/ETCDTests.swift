@@ -79,4 +79,37 @@ final class EtcdClientTests: XCTestCase {
         XCTAssertNotNil(fetchedUpdatedValue)
         XCTAssertEqual(String(data: fetchedUpdatedValue!, encoding: .utf8), updatedValue)
     }
+    
+    func testWatch() async throws {
+        let key = "testKey"
+        let value = "testValue".data(using: .utf8)!
+
+        try await etcdClient.put(key, value: "foo")
+
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            group.addTask {
+                try await self.etcdClient.watch(key) { watchAsyncSequence in
+                    var iterator = watchAsyncSequence.makeAsyncIterator()
+                    let events = try await iterator.next()
+                    guard let events = events else {
+                        XCTFail("No event received for key: \(key)")
+                        return
+                    }
+
+                    for event in events {
+                        if event.keyValue.key == key.data(using: .utf8) {
+                            XCTAssertEqual(event.keyValue.value, value)
+                            return
+                        }
+                    }
+
+                    XCTFail("No matching event received for key: \(key)")
+                }
+            }
+
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+            try await self.etcdClient.put(key, value: String(data: value, encoding: .utf8)!)
+            group.cancelAll()
+        }
+    }
 }
