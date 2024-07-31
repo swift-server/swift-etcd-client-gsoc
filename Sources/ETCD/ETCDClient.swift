@@ -33,6 +33,7 @@ public final class EtcdClient: @unchecked Sendable {
     private var group: EventLoopGroup
     private var connection: ClientConnection
     private var client: Etcdserverpb_KVNIOClient
+    private var watchClient: Etcdserverpb_WatchAsyncClient
 
     /// Initialize a new ETCD Connection.
     ///
@@ -47,6 +48,7 @@ public final class EtcdClient: @unchecked Sendable {
         self.connection = ClientConnection.insecure(group: self.group)
             .connect(host: host, port: port)
         self.client = Etcdserverpb_KVNIOClient(channel: self.connection)
+        self.watchClient = Etcdserverpb_WatchAsyncClient(channel: self.connection)
     }
 
     /// Sets a value for a specified key in the ETCD server.
@@ -131,5 +133,24 @@ public final class EtcdClient: @unchecked Sendable {
     public func put(_ key: String, value: String) async throws {
         try await put(key.utf8, value: value.utf8)
     }
-
+    
+    /// Watches a specified key in the ETCD server.
+    ///
+    /// - Parameters:
+    ///   - key: The key for which the value is watched. Parameter is of type Sequence<UInt8>.
+    ///   - operation: The operation to be run on the WatchAsyncSequence for the key.
+    public func watch<Result>(_ key: some Sequence<UInt8>, _ operation: (WatchAsyncSequence) async throws -> Result) async throws -> Result {
+        let request = [Etcdserverpb_WatchRequest.with { $0.createRequest.key = Data(key) }]
+        let watchAsyncSequence = WatchAsyncSequence(grpcAsyncSequence: watchClient.watch(request))
+        return try await operation(watchAsyncSequence)
+    }
+    
+    /// Watches a specified key in the ETCD server.
+    ///
+    /// - Parameters:
+    ///   - key: The key for which the value is watched. Parameter is of type String.
+    ///   - operation: The operation to be run on the WatchAsyncSequence for the key.
+    public func watch<Result>(_ key: String, _ operation: (WatchAsyncSequence) async throws -> Result) async throws -> Result {
+        try await self.watch(key.utf8, operation)
+    }
 }
