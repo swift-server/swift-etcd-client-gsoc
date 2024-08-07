@@ -63,11 +63,11 @@ public final class EtcdClient: @unchecked Sendable {
         try await set(key.utf8, value: value.utf8)
     }
 
-    /// Fetch the value for a key from the ETCD server.
+    /// Fetches a range from the ETCD server.
     ///
     /// - Parameter rangeRequest: The rangeRequst to get
     /// - Returns: A `Value` containing the fetched value, or `nil` if no value was found.
-    public func get(rangeRequest: RangeRequest) async throws -> Data? {
+    public func getRange(_ rangeRequest: RangeRequest) async throws -> Data? {
         let protoRangeRequest = rangeRequest.toProto()
         let call = client.range(protoRangeRequest)
         let response = try await call.response.get()

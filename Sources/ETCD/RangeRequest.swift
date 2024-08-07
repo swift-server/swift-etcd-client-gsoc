@@ -15,13 +15,13 @@
 import Foundation
 
 public struct RangeRequest {
-    enum SortOrder: Int {
+    public enum SortOrder: Int {
         case none = 0
         case ascend = 1
         case descend = 2
     }
     
-    enum SortTarget: Int {
+    public enum SortTarget: Int {
         case key = 0
         case version = 1
         case create = 2
@@ -29,19 +29,19 @@ public struct RangeRequest {
         case value = 4
     }
 
-    var key: Data
-    var rangeEnd: Data?
-    var limit: Int = 0
-    var revision: Int = 0
-    var sortOrder: SortOrder = .none
-    var sortTarget: SortTarget = .key
-    var serializable: Bool = false
-    var keysOnly: Bool = false
-    var countOnly: Bool = false
-    var minModRevision: Int = 0
-    var maxModRevision: Int = 0
-    var minCreateRevision: Int = 0
-    var maxCreateRevision: Int = 0
+    public var key: Data
+    public var rangeEnd: Data?
+    public var limit: Int = 0
+    public var revision: Int = 0
+    public var sortOrder: SortOrder = .none
+    public var sortTarget: SortTarget = .key
+    public var serializable: Bool = false
+    public var keysOnly: Bool = false
+    public var countOnly: Bool = false
+    public var minModRevision: Int = 0
+    public var maxModRevision: Int = 0
+    public var minCreateRevision: Int = 0
+    public var maxCreateRevision: Int = 0
     
     
     init(protoRangeRequest: Etcdserverpb_RangeRequest) {
