@@ -26,14 +26,18 @@ final class EtcdClientTests: XCTestCase {
 
     func testSetAndGetStringValue() async throws {
         try await etcdClient.set("testKey", value: "testValue")
-        let result = try await etcdClient.get("testKey")
+        let key = "testKey".data(using: .utf8)!
+        let rangeRequest = RangeRequest(key: key)
+        let result = try await etcdClient.getRange(rangeRequest)
         
         XCTAssertNotNil(result)
         XCTAssertEqual(String(data: result!, encoding: .utf8), "testValue")
     }
     
     func testGetNonExistentKey() async throws {
-        let result = try await etcdClient.get("nonExistentKey")
+        let key = "nonExistentKey".data(using: .utf8)!
+        let rangeRequest = RangeRequest(key: key)
+        let result = try await etcdClient.getRange(rangeRequest)
         XCTAssertNil(result)
     }
     
@@ -42,24 +46,27 @@ final class EtcdClientTests: XCTestCase {
         let value = "testValue"
         try await etcdClient.set(key, value: value)
         
-        var fetchedValue = try await etcdClient.get(key)
+        let rangeRequestKey = "testKey".data(using: .utf8)!
+        let rangeRequest = RangeRequest(key: rangeRequestKey)
+        var fetchedValue = try await etcdClient.getRange(rangeRequest)
         XCTAssertNotNil(fetchedValue)
         
         try await etcdClient.delete(key)
         
-        fetchedValue = try await etcdClient.get(key)
+        fetchedValue = try await etcdClient.getRange(rangeRequest)
         XCTAssertNil(fetchedValue)
     }
         
     func testDeleteNonExistentKey() async throws {
-        let key = "testKey"
+        let key = "testKey".data(using: .utf8)!
+        let rangeRequest = RangeRequest(key: key)
         
-        var fetchedValue = try await etcdClient.get(key)
+        var fetchedValue = try await etcdClient.getRange(rangeRequest)
         XCTAssertNil(fetchedValue)
         
         try await etcdClient.delete(key)
         
-        fetchedValue = try await etcdClient.get(key)
+        fetchedValue = try await etcdClient.getRange(rangeRequest)
         XCTAssertNil(fetchedValue)
     }
     
@@ -68,14 +75,18 @@ final class EtcdClientTests: XCTestCase {
         let value = "testValue"
         try await etcdClient.set(key, value: value)
         
-        let fetchedValue = try await etcdClient.get(key)
+        let rangeRequestKey = "testKey".data(using: .utf8)!
+        let rangeRequest = RangeRequest(key: rangeRequestKey)
+        let fetchedValue = try await etcdClient.getRange(rangeRequest)
         XCTAssertNotNil(fetchedValue)
         XCTAssertEqual(String(data: fetchedValue!, encoding: .utf8), value)
         
         let updatedValue = "updatedValue"
         try await etcdClient.put(key, value: updatedValue)
         
-        let fetchedUpdatedValue = try await etcdClient.get(key)
+        let rangeRequestUpdatedKey = "testKey".data(using: .utf8)!
+        let rangeRequestUpdated = RangeRequest(key: rangeRequestUpdatedKey)
+        let fetchedUpdatedValue = try await etcdClient.getRange(rangeRequestUpdated)
         XCTAssertNotNil(fetchedUpdatedValue)
         XCTAssertEqual(String(data: fetchedUpdatedValue!, encoding: .utf8), updatedValue)
     }

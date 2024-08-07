@@ -63,29 +63,19 @@ public final class EtcdClient: @unchecked Sendable {
         try await set(key.utf8, value: value.utf8)
     }
 
-    /// Fetch the value for a key from the ETCD server.
+    /// Fetches a range from the ETCD server.
     ///
-    /// - Parameter key: The key to fetch the value for. Parameter is of type Sequence<UInt8>.
+    /// - Parameter rangeRequest: The rangeRequst to get
     /// - Returns: A `Value` containing the fetched value, or `nil` if no value was found.
-    public func get(_ key: some Sequence<UInt8>) async throws -> Data? {
-        var rangeRequest = Etcdserverpb_RangeRequest()
-        rangeRequest.key = Data(key)
-
-        let call = client.range(rangeRequest)
+    public func getRange(_ rangeRequest: RangeRequest) async throws -> Data? {
+        let protoRangeRequest = rangeRequest.toProto()
+        let call = client.range(protoRangeRequest)
         let response = try await call.response.get()
         
         guard let kv = response.kvs.first else {
             return nil
         }
         return kv.value
-    }
-    
-    /// Fetch the value for a key from the ETCD server.
-    ///
-    /// - Parameter key: The key to fetch the value for. Parameter is of type String.
-    /// - Returns: A `Value` containing the fetched value, or `nil` if no value was found.
-    public func get(_ key: String) async throws -> Data? {
-        return try await get(key.utf8)
     }
     
     /// Delete the value for a key from the ETCD server.

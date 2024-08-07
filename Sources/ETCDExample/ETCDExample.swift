@@ -38,14 +38,16 @@ struct Example {
                 try await Task.sleep(for: .seconds(1))
                 
                 try await etcdClient.set("foo", value: "bar")
-                if let value = try await etcdClient.get("foo") {
+                let key = "foo".data(using: .utf8)!
+                let rangeRequest = RangeRequest(key: key)
+                if let value = try await etcdClient.get(rangeRequest: rangeRequest) {
                     if let stringValue = String(data: value, encoding: .utf8) {
                         print("Value is: \(stringValue)")
                         try await etcdClient.delete("foo")
                         print("Key deleted")
                         
                         // Trying to get the value again
-                        let deletedValue = try await etcdClient.get("foo")
+                        let deletedValue = try await etcdClient.get(rangeRequest: rangeRequest)
                         if deletedValue == nil {
                             print("Key not found after deletion")
                         } else {
