@@ -65,12 +65,9 @@ public final class EtcdClient: @unchecked Sendable {
 
     /// Fetch the value for a key from the ETCD server.
     ///
-    /// - Parameter key: The key to fetch the value for. Parameter is of type Sequence<UInt8>.
-    /// - Parameter endKey: Optional. endKey is the key following the last key to delete for the range [key, endKey). If endKey is not given, the range is defined to contain only the key argument. If endKey is one bit larger than the given key, then the range is all the keys with the prefix (the given key). If endKey is '\0', the range is all keys greater than or equal to the key argument
+    /// - Parameter rangeRequest: The rangeRequst to get
     /// - Returns: A `Value` containing the fetched value, or `nil` if no value was found.
-    public func get(_ key: Data, endKey: Data? = nil) async throws -> Data? {
-        let rangeRequest = RangeRequest(key: key, rangeEnd: endKey)
-        
+    public func get(rangeRequest: RangeRequest) async throws -> Data? {
         let protoRangeRequest = rangeRequest.toProto()
         let call = client.range(protoRangeRequest)
         let response = try await call.response.get()
@@ -79,14 +76,6 @@ public final class EtcdClient: @unchecked Sendable {
             return nil
         }
         return kv.value
-    }
-    
-    /// Fetch the value for a key from the ETCD server.
-    ///
-    /// - Parameter key: The key to fetch the value for. Parameter is of type String.
-    /// - Returns: A `Value` containing the fetched value, or `nil` if no value was found.
-    public func get(_ key: String, endKey: String? = nil) async throws -> Data? {
-        return try await get(Data(key.utf8), endKey: endKey != nil ? Data(endKey!.utf8) : nil)
     }
     
     /// Delete the value for a key from the ETCD server.

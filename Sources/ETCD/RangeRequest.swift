@@ -14,7 +14,7 @@
 
 import Foundation
 
-struct RangeRequest {
+public struct RangeRequest {
     enum SortOrder: Int {
         case none = 0
         case ascend = 1
@@ -60,7 +60,7 @@ struct RangeRequest {
         self.maxCreateRevision = Int(protoRangeRequest.maxCreateRevision)
     }
     
-    init(key: Data, rangeEnd: Data? = nil) {
+    public init(key: Data, rangeEnd: Data? = nil) {
         self.key = key
         self.rangeEnd = rangeEnd
     }
