@@ -20,7 +20,7 @@ public struct RangeRequest {
         case ascend = 1
         case descend = 2
     }
-    
+
     public enum SortTarget: Int {
         case key = 0
         case version = 1
@@ -42,44 +42,43 @@ public struct RangeRequest {
     public var maxModRevision: Int = 0
     public var minCreateRevision: Int = 0
     public var maxCreateRevision: Int = 0
-    
-    
+
     init(protoRangeRequest: Etcdserverpb_RangeRequest) {
-        self.key = protoRangeRequest.key
-        self.rangeEnd = protoRangeRequest.rangeEnd
-        self.limit = Int(protoRangeRequest.limit)
-        self.revision = Int(protoRangeRequest.revision)
-        self.sortOrder = SortOrder(rawValue: protoRangeRequest.sortOrder.rawValue) ?? .none
-        self.sortTarget = SortTarget(rawValue: protoRangeRequest.sortTarget.rawValue) ?? .key
-        self.serializable = protoRangeRequest.serializable
-        self.keysOnly = protoRangeRequest.keysOnly
-        self.countOnly = protoRangeRequest.countOnly
-        self.minModRevision = Int(protoRangeRequest.minModRevision)
-        self.maxModRevision = Int(protoRangeRequest.maxModRevision)
-        self.minCreateRevision = Int(protoRangeRequest.minCreateRevision)
-        self.maxCreateRevision = Int(protoRangeRequest.maxCreateRevision)
+        key = protoRangeRequest.key
+        rangeEnd = protoRangeRequest.rangeEnd
+        limit = Int(protoRangeRequest.limit)
+        revision = Int(protoRangeRequest.revision)
+        sortOrder = SortOrder(rawValue: protoRangeRequest.sortOrder.rawValue) ?? .none
+        sortTarget = SortTarget(rawValue: protoRangeRequest.sortTarget.rawValue) ?? .key
+        serializable = protoRangeRequest.serializable
+        keysOnly = protoRangeRequest.keysOnly
+        countOnly = protoRangeRequest.countOnly
+        minModRevision = Int(protoRangeRequest.minModRevision)
+        maxModRevision = Int(protoRangeRequest.maxModRevision)
+        minCreateRevision = Int(protoRangeRequest.minCreateRevision)
+        maxCreateRevision = Int(protoRangeRequest.maxCreateRevision)
     }
-    
+
     public init(key: Data, rangeEnd: Data? = nil) {
         self.key = key
         self.rangeEnd = rangeEnd
     }
-    
+
     func toProto() -> Etcdserverpb_RangeRequest {
         var protoRangeRequest = Etcdserverpb_RangeRequest()
-        protoRangeRequest.key = self.key
-        protoRangeRequest.rangeEnd = self.rangeEnd ?? Data()
-        protoRangeRequest.limit = Int64(self.limit)
-        protoRangeRequest.revision = Int64(self.revision)
-        protoRangeRequest.sortOrder = Etcdserverpb_RangeRequest.SortOrder(rawValue: self.sortOrder.rawValue) ?? .none
-        protoRangeRequest.sortTarget = Etcdserverpb_RangeRequest.SortTarget(rawValue: self.sortTarget.rawValue) ?? .key
-        protoRangeRequest.serializable = self.serializable
-        protoRangeRequest.keysOnly = self.keysOnly
-        protoRangeRequest.countOnly = self.countOnly
-        protoRangeRequest.minModRevision = Int64(self.minModRevision)
-        protoRangeRequest.maxModRevision = Int64(self.maxModRevision)
-        protoRangeRequest.minCreateRevision = Int64(self.minCreateRevision)
-        protoRangeRequest.maxCreateRevision = Int64(self.maxCreateRevision)
+        protoRangeRequest.key = key
+        protoRangeRequest.rangeEnd = rangeEnd ?? Data()
+        protoRangeRequest.limit = Int64(limit)
+        protoRangeRequest.revision = Int64(revision)
+        protoRangeRequest.sortOrder = Etcdserverpb_RangeRequest.SortOrder(rawValue: sortOrder.rawValue) ?? .none
+        protoRangeRequest.sortTarget = Etcdserverpb_RangeRequest.SortTarget(rawValue: sortTarget.rawValue) ?? .key
+        protoRangeRequest.serializable = serializable
+        protoRangeRequest.keysOnly = keysOnly
+        protoRangeRequest.countOnly = countOnly
+        protoRangeRequest.minModRevision = Int64(minModRevision)
+        protoRangeRequest.maxModRevision = Int64(maxModRevision)
+        protoRangeRequest.minCreateRevision = Int64(minCreateRevision)
+        protoRangeRequest.maxCreateRevision = Int64(maxCreateRevision)
         return protoRangeRequest
     }
 }

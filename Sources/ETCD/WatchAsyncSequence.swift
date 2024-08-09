@@ -24,7 +24,7 @@ public struct WatchAsyncSequence: AsyncSequence {
     }
 
     public func makeAsyncIterator() -> AsyncIterator {
-        .init(grpcIterator: self.grpcAsyncSequence.makeAsyncIterator())
+        .init(grpcIterator: grpcAsyncSequence.makeAsyncIterator())
     }
 
     public struct AsyncIterator: AsyncIteratorProtocol {
@@ -35,7 +35,7 @@ public struct WatchAsyncSequence: AsyncSequence {
         }
 
         public mutating func next() async throws -> Element? {
-            while let response = try await self.grpcIterator?.next() {
+            while let response = try await grpcIterator?.next() {
                 if response.created {
                     // We receive this after setting up the watch and need to wait for the next
                     // response that contains an event
@@ -45,14 +45,14 @@ public struct WatchAsyncSequence: AsyncSequence {
 
                 if response.canceled {
                     // We got cancelled and have to return nil now
-                    self.grpcIterator = nil
+                    grpcIterator = nil
                     return nil
                 }
 
                 let events = response.events.map { WatchEvent(protoEvent: $0) }
                 return events
             }
-            return nil;
+            return nil
         }
     }
 }
