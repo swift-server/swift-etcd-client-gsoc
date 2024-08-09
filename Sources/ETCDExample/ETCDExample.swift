@@ -1,3 +1,5 @@
+import Dispatch
+
 //===----------------------------------------------------------------------===//
 //
 // This source file is part of the swift-etcd-client-gsoc open source project
@@ -13,7 +15,6 @@
 //===----------------------------------------------------------------------===//
 import ETCD
 import NIO
-import Dispatch
 
 @main
 struct Example {
@@ -36,7 +37,7 @@ struct Example {
                 }
                 // Sleeping for a second to let the watch above setup
                 try await Task.sleep(for: .seconds(1))
-                
+
                 try await etcdClient.set("foo", value: "bar")
                 let key = "foo".data(using: .utf8)!
                 let rangeRequest = RangeRequest(key: key)
@@ -45,7 +46,7 @@ struct Example {
                         print("Value is: \(stringValue)")
                         try await etcdClient.delete("foo")
                         print("Key deleted")
-                        
+
                         // Trying to get the value again
                         let deletedValue = try await etcdClient.get(rangeRequest: rangeRequest)
                         if deletedValue == nil {

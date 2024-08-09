@@ -15,1553 +15,1555 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 struct Etcdserverpb_KeyValue {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  /// key is the key in bytes. An empty key is not allowed.
-  var key: Data = Data()
+    /// key is the key in bytes. An empty key is not allowed.
+    var key: Data = .init()
 
-  /// create_revision is the revision of last creation on this key.
-  var createRevision: Int64 = 0
+    /// create_revision is the revision of last creation on this key.
+    var createRevision: Int64 = 0
 
-  /// mod_revision is the revision of last modification on this key.
-  var modRevision: Int64 = 0
+    /// mod_revision is the revision of last modification on this key.
+    var modRevision: Int64 = 0
 
-  /// version is the version of the key. A deletion resets
-  /// the version to zero and any modification of the key
-  /// increases its version.
-  var version: Int64 = 0
+    /// version is the version of the key. A deletion resets
+    /// the version to zero and any modification of the key
+    /// increases its version.
+    var version: Int64 = 0
 
-  /// value is the value held by the key, in bytes.
-  var value: Data = Data()
+    /// value is the value held by the key, in bytes.
+    var value: Data = .init()
 
-  /// lease is the ID of the lease that attached to key.
-  /// When the attached lease expires, the key will be deleted.
-  /// If lease is 0, then no lease is attached to the key.
-  var lease: Int64 = 0
+    /// lease is the ID of the lease that attached to key.
+    /// When the attached lease expires, the key will be deleted.
+    /// If lease is 0, then no lease is attached to the key.
+    var lease: Int64 = 0
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+    var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+    init() {}
 }
 
 struct Etcdserverpb_ResponseHeader {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  /// cluster_id is the ID of the cluster which sent the response.
-  var clusterID: UInt64 = 0
+    /// cluster_id is the ID of the cluster which sent the response.
+    var clusterID: UInt64 = 0
 
-  /// member_id is the ID of the member which sent the response.
-  var memberID: UInt64 = 0
+    /// member_id is the ID of the member which sent the response.
+    var memberID: UInt64 = 0
 
-  /// revision is the key-value store revision when the request was applied, and it's
-  /// unset (so 0) in case of calls not interacting with key-value store.
-  /// For watch progress responses, the header.revision indicates progress. All future events
-  /// received in this stream are guaranteed to have a higher revision number than the
-  /// header.revision number.
-  var revision: Int64 = 0
+    /// revision is the key-value store revision when the request was applied, and it's
+    /// unset (so 0) in case of calls not interacting with key-value store.
+    /// For watch progress responses, the header.revision indicates progress. All future events
+    /// received in this stream are guaranteed to have a higher revision number than the
+    /// header.revision number.
+    var revision: Int64 = 0
 
-  /// raft_term is the raft term when the request was applied.
-  var raftTerm: UInt64 = 0
+    /// raft_term is the raft term when the request was applied.
+    var raftTerm: UInt64 = 0
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+    var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+    init() {}
 }
 
 struct Etcdserverpb_RangeRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  /// key is the first key for the range. If range_end is not given, the request only looks up key.
-  var key: Data = Data()
+    /// key is the first key for the range. If range_end is not given, the request only looks up key.
+    var key: Data = .init()
 
-  /// range_end is the upper bound on the requested range [key, range_end).
-  /// If range_end is '\0', the range is all keys >= key.
-  /// If range_end is key plus one (e.g., "aa"+1 == "ab", "a\xff"+1 == "b"),
-  /// then the range request gets all keys prefixed with key.
-  /// If both key and range_end are '\0', then the range request returns all keys.
-  var rangeEnd: Data = Data()
+    /// range_end is the upper bound on the requested range [key, range_end).
+    /// If range_end is '\0', the range is all keys >= key.
+    /// If range_end is key plus one (e.g., "aa"+1 == "ab", "a\xff"+1 == "b"),
+    /// then the range request gets all keys prefixed with key.
+    /// If both key and range_end are '\0', then the range request returns all keys.
+    var rangeEnd: Data = .init()
 
-  /// limit is a limit on the number of keys returned for the request. When limit is set to 0,
-  /// it is treated as no limit.
-  var limit: Int64 = 0
+    /// limit is a limit on the number of keys returned for the request. When limit is set to 0,
+    /// it is treated as no limit.
+    var limit: Int64 = 0
 
-  /// revision is the point-in-time of the key-value store to use for the range.
-  /// If revision is less or equal to zero, the range is over the newest key-value store.
-  /// If the revision has been compacted, ErrCompacted is returned as a response.
-  var revision: Int64 = 0
+    /// revision is the point-in-time of the key-value store to use for the range.
+    /// If revision is less or equal to zero, the range is over the newest key-value store.
+    /// If the revision has been compacted, ErrCompacted is returned as a response.
+    var revision: Int64 = 0
 
-  /// sort_order is the order for returned sorted results.
-  var sortOrder: Etcdserverpb_RangeRequest.SortOrder = .none
+    /// sort_order is the order for returned sorted results.
+    var sortOrder: Etcdserverpb_RangeRequest.SortOrder = .none
 
-  /// sort_target is the key-value field to use for sorting.
-  var sortTarget: Etcdserverpb_RangeRequest.SortTarget = .key
+    /// sort_target is the key-value field to use for sorting.
+    var sortTarget: Etcdserverpb_RangeRequest.SortTarget = .key
 
-  /// serializable sets the range request to use serializable member-local reads.
-  /// Range requests are linearizable by default; linearizable requests have higher
-  /// latency and lower throughput than serializable requests but reflect the current
-  /// consensus of the cluster. For better performance, in exchange for possible stale reads,
-  /// a serializable range request is served locally without needing to reach consensus
-  /// with other nodes in the cluster.
-  var serializable: Bool = false
+    /// serializable sets the range request to use serializable member-local reads.
+    /// Range requests are linearizable by default; linearizable requests have higher
+    /// latency and lower throughput than serializable requests but reflect the current
+    /// consensus of the cluster. For better performance, in exchange for possible stale reads,
+    /// a serializable range request is served locally without needing to reach consensus
+    /// with other nodes in the cluster.
+    var serializable: Bool = false
 
-  /// keys_only when set returns only the keys and not the values.
-  var keysOnly: Bool = false
+    /// keys_only when set returns only the keys and not the values.
+    var keysOnly: Bool = false
 
-  /// count_only when set returns only the count of the keys in the range.
-  var countOnly: Bool = false
+    /// count_only when set returns only the count of the keys in the range.
+    var countOnly: Bool = false
 
-  /// min_mod_revision is the lower bound for returned key mod revisions; all keys with
-  /// lesser mod revisions will be filtered away.
-  var minModRevision: Int64 = 0
+    /// min_mod_revision is the lower bound for returned key mod revisions; all keys with
+    /// lesser mod revisions will be filtered away.
+    var minModRevision: Int64 = 0
 
-  /// max_mod_revision is the upper bound for returned key mod revisions; all keys with
-  /// greater mod revisions will be filtered away.
-  var maxModRevision: Int64 = 0
+    /// max_mod_revision is the upper bound for returned key mod revisions; all keys with
+    /// greater mod revisions will be filtered away.
+    var maxModRevision: Int64 = 0
 
-  /// min_create_revision is the lower bound for returned key create revisions; all keys with
-  /// lesser create revisions will be filtered away.
-  var minCreateRevision: Int64 = 0
+    /// min_create_revision is the lower bound for returned key create revisions; all keys with
+    /// lesser create revisions will be filtered away.
+    var minCreateRevision: Int64 = 0
 
-  /// max_create_revision is the upper bound for returned key create revisions; all keys with
-  /// greater create revisions will be filtered away.
-  var maxCreateRevision: Int64 = 0
+    /// max_create_revision is the upper bound for returned key create revisions; all keys with
+    /// greater create revisions will be filtered away.
+    var maxCreateRevision: Int64 = 0
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+    var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  enum SortOrder: SwiftProtobuf.Enum {
-    typealias RawValue = Int
+    enum SortOrder: SwiftProtobuf.Enum {
+        typealias RawValue = Int
 
-    /// default, no sorting
-    case none // = 0
+        /// default, no sorting
+        case none // = 0
 
-    /// lowest target value first
-    case ascend // = 1
+        /// lowest target value first
+        case ascend // = 1
 
-    /// highest target value first
-    case descend // = 2
-    case UNRECOGNIZED(Int)
+        /// highest target value first
+        case descend // = 2
+        case UNRECOGNIZED(Int)
 
-    init() {
-      self = .none
+        init() {
+            self = .none
+        }
+
+        init?(rawValue: Int) {
+            switch rawValue {
+            case 0: self = .none
+            case 1: self = .ascend
+            case 2: self = .descend
+            default: self = .UNRECOGNIZED(rawValue)
+            }
+        }
+
+        var rawValue: Int {
+            switch self {
+            case .none: return 0
+            case .ascend: return 1
+            case .descend: return 2
+            case let .UNRECOGNIZED(i): return i
+            }
+        }
     }
 
-    init?(rawValue: Int) {
-      switch rawValue {
-      case 0: self = .none
-      case 1: self = .ascend
-      case 2: self = .descend
-      default: self = .UNRECOGNIZED(rawValue)
-      }
+    enum SortTarget: SwiftProtobuf.Enum {
+        typealias RawValue = Int
+        case key // = 0
+        case version // = 1
+        case create // = 2
+        case mod // = 3
+        case value // = 4
+        case UNRECOGNIZED(Int)
+
+        init() {
+            self = .key
+        }
+
+        init?(rawValue: Int) {
+            switch rawValue {
+            case 0: self = .key
+            case 1: self = .version
+            case 2: self = .create
+            case 3: self = .mod
+            case 4: self = .value
+            default: self = .UNRECOGNIZED(rawValue)
+            }
+        }
+
+        var rawValue: Int {
+            switch self {
+            case .key: return 0
+            case .version: return 1
+            case .create: return 2
+            case .mod: return 3
+            case .value: return 4
+            case let .UNRECOGNIZED(i): return i
+            }
+        }
     }
 
-    var rawValue: Int {
-      switch self {
-      case .none: return 0
-      case .ascend: return 1
-      case .descend: return 2
-      case .UNRECOGNIZED(let i): return i
-      }
-    }
-
-  }
-
-  enum SortTarget: SwiftProtobuf.Enum {
-    typealias RawValue = Int
-    case key // = 0
-    case version // = 1
-    case create // = 2
-    case mod // = 3
-    case value // = 4
-    case UNRECOGNIZED(Int)
-
-    init() {
-      self = .key
-    }
-
-    init?(rawValue: Int) {
-      switch rawValue {
-      case 0: self = .key
-      case 1: self = .version
-      case 2: self = .create
-      case 3: self = .mod
-      case 4: self = .value
-      default: self = .UNRECOGNIZED(rawValue)
-      }
-    }
-
-    var rawValue: Int {
-      switch self {
-      case .key: return 0
-      case .version: return 1
-      case .create: return 2
-      case .mod: return 3
-      case .value: return 4
-      case .UNRECOGNIZED(let i): return i
-      }
-    }
-
-  }
-
-  init() {}
+    init() {}
 }
 
 #if swift(>=4.2)
 
-extension Etcdserverpb_RangeRequest.SortOrder: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  static let allCases: [Etcdserverpb_RangeRequest.SortOrder] = [
-    .none,
-    .ascend,
-    .descend,
-  ]
-}
+    extension Etcdserverpb_RangeRequest.SortOrder: CaseIterable {
+        // The compiler won't synthesize support with the UNRECOGNIZED case.
+        static let allCases: [Etcdserverpb_RangeRequest.SortOrder] = [
+            .none,
+            .ascend,
+            .descend,
+        ]
+    }
 
-extension Etcdserverpb_RangeRequest.SortTarget: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  static let allCases: [Etcdserverpb_RangeRequest.SortTarget] = [
-    .key,
-    .version,
-    .create,
-    .mod,
-    .value,
-  ]
-}
+    extension Etcdserverpb_RangeRequest.SortTarget: CaseIterable {
+        // The compiler won't synthesize support with the UNRECOGNIZED case.
+        static let allCases: [Etcdserverpb_RangeRequest.SortTarget] = [
+            .key,
+            .version,
+            .create,
+            .mod,
+            .value,
+        ]
+    }
 
-#endif  // swift(>=4.2)
+#endif // swift(>=4.2)
 
 struct Etcdserverpb_RangeResponse {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  var header: Etcdserverpb_ResponseHeader {
-    get {return _header ?? Etcdserverpb_ResponseHeader()}
-    set {_header = newValue}
-  }
-  /// Returns true if `header` has been explicitly set.
-  var hasHeader: Bool {return self._header != nil}
-  /// Clears the value of `header`. Subsequent reads from it will return its default value.
-  mutating func clearHeader() {self._header = nil}
+    var header: Etcdserverpb_ResponseHeader {
+        get { return _header ?? Etcdserverpb_ResponseHeader() }
+        set { _header = newValue }
+    }
 
-  /// kvs is the list of key-value pairs matched by the range request.
-  /// kvs is empty when count is requested.
-  var kvs: [Etcdserverpb_KeyValue] = []
+    /// Returns true if `header` has been explicitly set.
+    var hasHeader: Bool { return _header != nil }
+    /// Clears the value of `header`. Subsequent reads from it will return its default value.
+    mutating func clearHeader() { _header = nil }
 
-  /// more indicates if there are more keys to return in the requested range.
-  var more: Bool = false
+    /// kvs is the list of key-value pairs matched by the range request.
+    /// kvs is empty when count is requested.
+    var kvs: [Etcdserverpb_KeyValue] = []
 
-  /// count is set to the number of keys within the range when requested.
-  var count: Int64 = 0
+    /// more indicates if there are more keys to return in the requested range.
+    var more: Bool = false
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+    /// count is set to the number of keys within the range when requested.
+    var count: Int64 = 0
 
-  init() {}
+    var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  fileprivate var _header: Etcdserverpb_ResponseHeader? = nil
+    init() {}
+
+    fileprivate var _header: Etcdserverpb_ResponseHeader?
 }
 
 struct Etcdserverpb_PutRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  /// key is the key, in bytes, to put into the key-value store.
-  var key: Data = Data()
+    /// key is the key, in bytes, to put into the key-value store.
+    var key: Data = .init()
 
-  /// value is the value, in bytes, to associate with the key in the key-value store.
-  var value: Data = Data()
+    /// value is the value, in bytes, to associate with the key in the key-value store.
+    var value: Data = .init()
 
-  /// lease is the lease ID to associate with the key in the key-value store. A lease
-  /// value of 0 indicates no lease.
-  var lease: Int64 = 0
+    /// lease is the lease ID to associate with the key in the key-value store. A lease
+    /// value of 0 indicates no lease.
+    var lease: Int64 = 0
 
-  /// If prev_kv is set, etcd gets the previous key-value pair before changing it.
-  /// The previous key-value pair will be returned in the put response.
-  var prevKv: Bool = false
+    /// If prev_kv is set, etcd gets the previous key-value pair before changing it.
+    /// The previous key-value pair will be returned in the put response.
+    var prevKv: Bool = false
 
-  /// If ignore_value is set, etcd updates the key using its current value.
-  /// Returns an error if the key does not exist.
-  var ignoreValue: Bool = false
+    /// If ignore_value is set, etcd updates the key using its current value.
+    /// Returns an error if the key does not exist.
+    var ignoreValue: Bool = false
 
-  /// If ignore_lease is set, etcd updates the key using its current lease.
-  /// Returns an error if the key does not exist.
-  var ignoreLease: Bool = false
+    /// If ignore_lease is set, etcd updates the key using its current lease.
+    /// Returns an error if the key does not exist.
+    var ignoreLease: Bool = false
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+    var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+    init() {}
 }
 
 struct Etcdserverpb_PutResponse {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  var header: Etcdserverpb_ResponseHeader {
-    get {return _header ?? Etcdserverpb_ResponseHeader()}
-    set {_header = newValue}
-  }
-  /// Returns true if `header` has been explicitly set.
-  var hasHeader: Bool {return self._header != nil}
-  /// Clears the value of `header`. Subsequent reads from it will return its default value.
-  mutating func clearHeader() {self._header = nil}
+    var header: Etcdserverpb_ResponseHeader {
+        get { return _header ?? Etcdserverpb_ResponseHeader() }
+        set { _header = newValue }
+    }
 
-  /// if prev_kv is set in the request, the previous key-value pair will be returned.
-  var prevKv: Etcdserverpb_KeyValue {
-    get {return _prevKv ?? Etcdserverpb_KeyValue()}
-    set {_prevKv = newValue}
-  }
-  /// Returns true if `prevKv` has been explicitly set.
-  var hasPrevKv: Bool {return self._prevKv != nil}
-  /// Clears the value of `prevKv`. Subsequent reads from it will return its default value.
-  mutating func clearPrevKv() {self._prevKv = nil}
+    /// Returns true if `header` has been explicitly set.
+    var hasHeader: Bool { return _header != nil }
+    /// Clears the value of `header`. Subsequent reads from it will return its default value.
+    mutating func clearHeader() { _header = nil }
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+    /// if prev_kv is set in the request, the previous key-value pair will be returned.
+    var prevKv: Etcdserverpb_KeyValue {
+        get { return _prevKv ?? Etcdserverpb_KeyValue() }
+        set { _prevKv = newValue }
+    }
 
-  init() {}
+    /// Returns true if `prevKv` has been explicitly set.
+    var hasPrevKv: Bool { return _prevKv != nil }
+    /// Clears the value of `prevKv`. Subsequent reads from it will return its default value.
+    mutating func clearPrevKv() { _prevKv = nil }
 
-  fileprivate var _header: Etcdserverpb_ResponseHeader? = nil
-  fileprivate var _prevKv: Etcdserverpb_KeyValue? = nil
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+
+    fileprivate var _header: Etcdserverpb_ResponseHeader?
+    fileprivate var _prevKv: Etcdserverpb_KeyValue?
 }
 
 struct Etcdserverpb_DeleteRangeRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  /// key is the first key to delete in the range.
-  var key: Data = Data()
+    /// key is the first key to delete in the range.
+    var key: Data = .init()
 
-  /// range_end is the key following the last key to delete for the range [key, range_end).
-  /// If range_end is not given, the range is defined to contain only the key argument.
-  /// If range_end is one bit larger than the given key, then the range is all the keys
-  /// with the prefix (the given key).
-  /// If range_end is '\0', the range is all keys greater than or equal to the key argument.
-  var rangeEnd: Data = Data()
+    /// range_end is the key following the last key to delete for the range [key, range_end).
+    /// If range_end is not given, the range is defined to contain only the key argument.
+    /// If range_end is one bit larger than the given key, then the range is all the keys
+    /// with the prefix (the given key).
+    /// If range_end is '\0', the range is all keys greater than or equal to the key argument.
+    var rangeEnd: Data = .init()
 
-  /// If prev_kv is set, etcd gets the previous key-value pairs before deleting it.
-  /// The previous key-value pairs will be returned in the delete response.
-  var prevKv: Bool = false
+    /// If prev_kv is set, etcd gets the previous key-value pairs before deleting it.
+    /// The previous key-value pairs will be returned in the delete response.
+    var prevKv: Bool = false
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+    var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+    init() {}
 }
 
 struct Etcdserverpb_DeleteRangeResponse {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  var header: Etcdserverpb_ResponseHeader {
-    get {return _header ?? Etcdserverpb_ResponseHeader()}
-    set {_header = newValue}
-  }
-  /// Returns true if `header` has been explicitly set.
-  var hasHeader: Bool {return self._header != nil}
-  /// Clears the value of `header`. Subsequent reads from it will return its default value.
-  mutating func clearHeader() {self._header = nil}
+    var header: Etcdserverpb_ResponseHeader {
+        get { return _header ?? Etcdserverpb_ResponseHeader() }
+        set { _header = newValue }
+    }
 
-  /// deleted is the number of keys deleted by the delete range request.
-  var deleted: Int64 = 0
+    /// Returns true if `header` has been explicitly set.
+    var hasHeader: Bool { return _header != nil }
+    /// Clears the value of `header`. Subsequent reads from it will return its default value.
+    mutating func clearHeader() { _header = nil }
 
-  /// if prev_kv is set in the request, the previous key-value pairs will be returned.
-  var prevKvs: [Etcdserverpb_KeyValue] = []
+    /// deleted is the number of keys deleted by the delete range request.
+    var deleted: Int64 = 0
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+    /// if prev_kv is set in the request, the previous key-value pairs will be returned.
+    var prevKvs: [Etcdserverpb_KeyValue] = []
 
-  init() {}
+    var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  fileprivate var _header: Etcdserverpb_ResponseHeader? = nil
+    init() {}
+
+    fileprivate var _header: Etcdserverpb_ResponseHeader?
 }
 
 struct Etcdserverpb_WatchRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  /// request_union is a request to either create a new watcher or cancel an existing watcher.
-  var requestUnion: Etcdserverpb_WatchRequest.OneOf_RequestUnion? = nil
+    /// request_union is a request to either create a new watcher or cancel an existing watcher.
+    var requestUnion: Etcdserverpb_WatchRequest.OneOf_RequestUnion?
 
-  var createRequest: Etcdserverpb_WatchCreateRequest {
-    get {
-      if case .createRequest(let v)? = requestUnion {return v}
-      return Etcdserverpb_WatchCreateRequest()
+    var createRequest: Etcdserverpb_WatchCreateRequest {
+        get {
+            if case let .createRequest(v)? = requestUnion { return v }
+            return Etcdserverpb_WatchCreateRequest()
+        }
+        set { requestUnion = .createRequest(newValue) }
     }
-    set {requestUnion = .createRequest(newValue)}
-  }
 
-  var cancelRequest: Etcdserverpb_WatchCancelRequest {
-    get {
-      if case .cancelRequest(let v)? = requestUnion {return v}
-      return Etcdserverpb_WatchCancelRequest()
+    var cancelRequest: Etcdserverpb_WatchCancelRequest {
+        get {
+            if case let .cancelRequest(v)? = requestUnion { return v }
+            return Etcdserverpb_WatchCancelRequest()
+        }
+        set { requestUnion = .cancelRequest(newValue) }
     }
-    set {requestUnion = .cancelRequest(newValue)}
-  }
 
-  var progressRequest: Etcdserverpb_WatchProgressRequest {
-    get {
-      if case .progressRequest(let v)? = requestUnion {return v}
-      return Etcdserverpb_WatchProgressRequest()
+    var progressRequest: Etcdserverpb_WatchProgressRequest {
+        get {
+            if case let .progressRequest(v)? = requestUnion { return v }
+            return Etcdserverpb_WatchProgressRequest()
+        }
+        set { requestUnion = .progressRequest(newValue) }
     }
-    set {requestUnion = .progressRequest(newValue)}
-  }
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+    var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  /// request_union is a request to either create a new watcher or cancel an existing watcher.
-  enum OneOf_RequestUnion: Equatable {
-    case createRequest(Etcdserverpb_WatchCreateRequest)
-    case cancelRequest(Etcdserverpb_WatchCancelRequest)
-    case progressRequest(Etcdserverpb_WatchProgressRequest)
+    /// request_union is a request to either create a new watcher or cancel an existing watcher.
+    enum OneOf_RequestUnion: Equatable {
+        case createRequest(Etcdserverpb_WatchCreateRequest)
+        case cancelRequest(Etcdserverpb_WatchCancelRequest)
+        case progressRequest(Etcdserverpb_WatchProgressRequest)
 
-  #if !swift(>=4.1)
-    static func ==(lhs: Etcdserverpb_WatchRequest.OneOf_RequestUnion, rhs: Etcdserverpb_WatchRequest.OneOf_RequestUnion) -> Bool {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch (lhs, rhs) {
-      case (.createRequest, .createRequest): return {
-        guard case .createRequest(let l) = lhs, case .createRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.cancelRequest, .cancelRequest): return {
-        guard case .cancelRequest(let l) = lhs, case .cancelRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.progressRequest, .progressRequest): return {
-        guard case .progressRequest(let l) = lhs, case .progressRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      default: return false
-      }
+        #if !swift(>=4.1)
+            static func == (lhs: Etcdserverpb_WatchRequest.OneOf_RequestUnion, rhs: Etcdserverpb_WatchRequest.OneOf_RequestUnion) -> Bool {
+                // The use of inline closures is to circumvent an issue where the compiler
+                // allocates stack space for every case branch when no optimizations are
+                // enabled. https://github.com/apple/swift-protobuf/issues/1034
+                switch (lhs, rhs) {
+                case (.createRequest, .createRequest): return {
+                        guard case let .createRequest(l) = lhs, case let .createRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.cancelRequest, .cancelRequest): return {
+                        guard case let .cancelRequest(l) = lhs, case let .cancelRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.progressRequest, .progressRequest): return {
+                        guard case let .progressRequest(l) = lhs, case let .progressRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                default: return false
+                }
+            }
+        #endif
     }
-  #endif
-  }
 
-  init() {}
+    init() {}
 }
 
 struct Etcdserverpb_WatchCreateRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  /// key is the key to register for watching.
-  var key: Data = Data()
+    /// key is the key to register for watching.
+    var key: Data = .init()
 
-  /// range_end is the end of the range [key, range_end) to watch. If range_end is not given,
-  /// only the key argument is watched. If range_end is equal to '\0', all keys greater than
-  /// or equal to the key argument are watched.
-  /// If the range_end is one bit larger than the given key,
-  /// then all keys with the prefix (the given key) will be watched.
-  var rangeEnd: Data = Data()
+    /// range_end is the end of the range [key, range_end) to watch. If range_end is not given,
+    /// only the key argument is watched. If range_end is equal to '\0', all keys greater than
+    /// or equal to the key argument are watched.
+    /// If the range_end is one bit larger than the given key,
+    /// then all keys with the prefix (the given key) will be watched.
+    var rangeEnd: Data = .init()
 
-  /// start_revision is an optional revision to watch from (inclusive). No start_revision is "now".
-  var startRevision: Int64 = 0
+    /// start_revision is an optional revision to watch from (inclusive). No start_revision is "now".
+    var startRevision: Int64 = 0
 
-  /// progress_notify is set so that the etcd server will periodically send a WatchResponse with
-  /// no events to the new watcher if there are no recent events. It is useful when clients
-  /// wish to recover a disconnected watcher starting from a recent known revision.
-  /// The etcd server may decide how often it will send notifications based on current load.
-  var progressNotify: Bool = false
+    /// progress_notify is set so that the etcd server will periodically send a WatchResponse with
+    /// no events to the new watcher if there are no recent events. It is useful when clients
+    /// wish to recover a disconnected watcher starting from a recent known revision.
+    /// The etcd server may decide how often it will send notifications based on current load.
+    var progressNotify: Bool = false
 
-  /// filters filter the events at server side before it sends back to the watcher.
-  var filters: [Etcdserverpb_WatchCreateRequest.FilterType] = []
+    /// filters filter the events at server side before it sends back to the watcher.
+    var filters: [Etcdserverpb_WatchCreateRequest.FilterType] = []
 
-  /// If prev_kv is set, created watcher gets the previous KV before the event happens.
-  /// If the previous KV is already compacted, nothing will be returned.
-  var prevKv: Bool = false
+    /// If prev_kv is set, created watcher gets the previous KV before the event happens.
+    /// If the previous KV is already compacted, nothing will be returned.
+    var prevKv: Bool = false
 
-  /// If watch_id is provided and non-zero, it will be assigned to this watcher.
-  /// Since creating a watcher in etcd is not a synchronous operation,
-  /// this can be used ensure that ordering is correct when creating multiple
-  /// watchers on the same stream. Creating a watcher with an ID already in
-  /// use on the stream will cause an error to be returned.
-  var watchID: Int64 = 0
+    /// If watch_id is provided and non-zero, it will be assigned to this watcher.
+    /// Since creating a watcher in etcd is not a synchronous operation,
+    /// this can be used ensure that ordering is correct when creating multiple
+    /// watchers on the same stream. Creating a watcher with an ID already in
+    /// use on the stream will cause an error to be returned.
+    var watchID: Int64 = 0
 
-  /// fragment enables splitting large revisions into multiple watch responses.
-  var fragment: Bool = false
+    /// fragment enables splitting large revisions into multiple watch responses.
+    var fragment: Bool = false
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+    var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  enum FilterType: SwiftProtobuf.Enum {
-    typealias RawValue = Int
+    enum FilterType: SwiftProtobuf.Enum {
+        typealias RawValue = Int
 
-    /// filter out put event.
-    case noput // = 0
+        /// filter out put event.
+        case noput // = 0
 
-    /// filter out delete event.
-    case nodelete // = 1
-    case UNRECOGNIZED(Int)
+        /// filter out delete event.
+        case nodelete // = 1
+        case UNRECOGNIZED(Int)
 
-    init() {
-      self = .noput
+        init() {
+            self = .noput
+        }
+
+        init?(rawValue: Int) {
+            switch rawValue {
+            case 0: self = .noput
+            case 1: self = .nodelete
+            default: self = .UNRECOGNIZED(rawValue)
+            }
+        }
+
+        var rawValue: Int {
+            switch self {
+            case .noput: return 0
+            case .nodelete: return 1
+            case let .UNRECOGNIZED(i): return i
+            }
+        }
     }
 
-    init?(rawValue: Int) {
-      switch rawValue {
-      case 0: self = .noput
-      case 1: self = .nodelete
-      default: self = .UNRECOGNIZED(rawValue)
-      }
-    }
-
-    var rawValue: Int {
-      switch self {
-      case .noput: return 0
-      case .nodelete: return 1
-      case .UNRECOGNIZED(let i): return i
-      }
-    }
-
-  }
-
-  init() {}
+    init() {}
 }
 
 #if swift(>=4.2)
 
-extension Etcdserverpb_WatchCreateRequest.FilterType: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  static let allCases: [Etcdserverpb_WatchCreateRequest.FilterType] = [
-    .noput,
-    .nodelete,
-  ]
-}
+    extension Etcdserverpb_WatchCreateRequest.FilterType: CaseIterable {
+        // The compiler won't synthesize support with the UNRECOGNIZED case.
+        static let allCases: [Etcdserverpb_WatchCreateRequest.FilterType] = [
+            .noput,
+            .nodelete,
+        ]
+    }
 
-#endif  // swift(>=4.2)
+#endif // swift(>=4.2)
 
 struct Etcdserverpb_WatchCancelRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  /// watch_id is the watcher id to cancel so that no more events are transmitted.
-  var watchID: Int64 = 0
+    /// watch_id is the watcher id to cancel so that no more events are transmitted.
+    var watchID: Int64 = 0
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+    var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+    init() {}
 }
 
 /// Requests the a watch stream progress status be sent in the watch response stream as soon as
 /// possible.
 struct Etcdserverpb_WatchProgressRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+    var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+    init() {}
 }
 
 struct Etcdserverpb_WatchResponse {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  var header: Etcdserverpb_ResponseHeader {
-    get {return _header ?? Etcdserverpb_ResponseHeader()}
-    set {_header = newValue}
-  }
-  /// Returns true if `header` has been explicitly set.
-  var hasHeader: Bool {return self._header != nil}
-  /// Clears the value of `header`. Subsequent reads from it will return its default value.
-  mutating func clearHeader() {self._header = nil}
+    var header: Etcdserverpb_ResponseHeader {
+        get { return _header ?? Etcdserverpb_ResponseHeader() }
+        set { _header = newValue }
+    }
 
-  /// watch_id is the ID of the watcher that corresponds to the response.
-  var watchID: Int64 = 0
+    /// Returns true if `header` has been explicitly set.
+    var hasHeader: Bool { return _header != nil }
+    /// Clears the value of `header`. Subsequent reads from it will return its default value.
+    mutating func clearHeader() { _header = nil }
 
-  /// created is set to true if the response is for a create watch request.
-  /// The client should record the watch_id and expect to receive events for
-  /// the created watcher from the same stream.
-  /// All events sent to the created watcher will attach with the same watch_id.
-  var created: Bool = false
+    /// watch_id is the ID of the watcher that corresponds to the response.
+    var watchID: Int64 = 0
 
-  /// canceled is set to true if the response is for a cancel watch request.
-  /// No further events will be sent to the canceled watcher.
-  var canceled: Bool = false
+    /// created is set to true if the response is for a create watch request.
+    /// The client should record the watch_id and expect to receive events for
+    /// the created watcher from the same stream.
+    /// All events sent to the created watcher will attach with the same watch_id.
+    var created: Bool = false
 
-  /// compact_revision is set to the minimum index if a watcher tries to watch
-  /// at a compacted index.
-  ///
-  /// This happens when creating a watcher at a compacted revision or the watcher cannot
-  /// catch up with the progress of the key-value store.
-  ///
-  /// The client should treat the watcher as canceled and should not try to create any
-  /// watcher with the same start_revision again.
-  var compactRevision: Int64 = 0
+    /// canceled is set to true if the response is for a cancel watch request.
+    /// No further events will be sent to the canceled watcher.
+    var canceled: Bool = false
 
-  /// cancel_reason indicates the reason for canceling the watcher.
-  var cancelReason: String = String()
+    /// compact_revision is set to the minimum index if a watcher tries to watch
+    /// at a compacted index.
+    ///
+    /// This happens when creating a watcher at a compacted revision or the watcher cannot
+    /// catch up with the progress of the key-value store.
+    ///
+    /// The client should treat the watcher as canceled and should not try to create any
+    /// watcher with the same start_revision again.
+    var compactRevision: Int64 = 0
 
-  /// framgment is true if large watch response was split over multiple responses.
-  var fragment: Bool = false
+    /// cancel_reason indicates the reason for canceling the watcher.
+    var cancelReason: String = .init()
 
-  var events: [Etcdserverpb_Event] = []
+    /// framgment is true if large watch response was split over multiple responses.
+    var fragment: Bool = false
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+    var events: [Etcdserverpb_Event] = []
 
-  init() {}
+    var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  fileprivate var _header: Etcdserverpb_ResponseHeader? = nil
+    init() {}
+
+    fileprivate var _header: Etcdserverpb_ResponseHeader?
 }
 
 struct Etcdserverpb_Event {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  /// type is the kind of event. If type is a PUT, it indicates
-  /// new data has been stored to the key. If type is a DELETE,
-  /// it indicates the key was deleted.
-  var type: Etcdserverpb_Event.EventType = .put
+    /// type is the kind of event. If type is a PUT, it indicates
+    /// new data has been stored to the key. If type is a DELETE,
+    /// it indicates the key was deleted.
+    var type: Etcdserverpb_Event.EventType = .put
 
-  /// kv holds the KeyValue for the event.
-  /// A PUT event contains current kv pair.
-  /// A PUT event with kv.Version=1 indicates the creation of a key.
-  /// A DELETE/EXPIRE event contains the deleted key with
-  /// its modification revision set to the revision of deletion.
-  var kv: Etcdserverpb_KeyValue {
-    get {return _kv ?? Etcdserverpb_KeyValue()}
-    set {_kv = newValue}
-  }
-  /// Returns true if `kv` has been explicitly set.
-  var hasKv: Bool {return self._kv != nil}
-  /// Clears the value of `kv`. Subsequent reads from it will return its default value.
-  mutating func clearKv() {self._kv = nil}
-
-  /// prev_kv holds the key-value pair before the event happens.
-  var prevKv: Etcdserverpb_KeyValue {
-    get {return _prevKv ?? Etcdserverpb_KeyValue()}
-    set {_prevKv = newValue}
-  }
-  /// Returns true if `prevKv` has been explicitly set.
-  var hasPrevKv: Bool {return self._prevKv != nil}
-  /// Clears the value of `prevKv`. Subsequent reads from it will return its default value.
-  mutating func clearPrevKv() {self._prevKv = nil}
-
-  var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  enum EventType: SwiftProtobuf.Enum {
-    typealias RawValue = Int
-    case put // = 0
-    case delete // = 1
-    case UNRECOGNIZED(Int)
-
-    init() {
-      self = .put
+    /// kv holds the KeyValue for the event.
+    /// A PUT event contains current kv pair.
+    /// A PUT event with kv.Version=1 indicates the creation of a key.
+    /// A DELETE/EXPIRE event contains the deleted key with
+    /// its modification revision set to the revision of deletion.
+    var kv: Etcdserverpb_KeyValue {
+        get { return _kv ?? Etcdserverpb_KeyValue() }
+        set { _kv = newValue }
     }
 
-    init?(rawValue: Int) {
-      switch rawValue {
-      case 0: self = .put
-      case 1: self = .delete
-      default: self = .UNRECOGNIZED(rawValue)
-      }
+    /// Returns true if `kv` has been explicitly set.
+    var hasKv: Bool { return _kv != nil }
+    /// Clears the value of `kv`. Subsequent reads from it will return its default value.
+    mutating func clearKv() { _kv = nil }
+
+    /// prev_kv holds the key-value pair before the event happens.
+    var prevKv: Etcdserverpb_KeyValue {
+        get { return _prevKv ?? Etcdserverpb_KeyValue() }
+        set { _prevKv = newValue }
     }
 
-    var rawValue: Int {
-      switch self {
-      case .put: return 0
-      case .delete: return 1
-      case .UNRECOGNIZED(let i): return i
-      }
+    /// Returns true if `prevKv` has been explicitly set.
+    var hasPrevKv: Bool { return _prevKv != nil }
+    /// Clears the value of `prevKv`. Subsequent reads from it will return its default value.
+    mutating func clearPrevKv() { _prevKv = nil }
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    enum EventType: SwiftProtobuf.Enum {
+        typealias RawValue = Int
+        case put // = 0
+        case delete // = 1
+        case UNRECOGNIZED(Int)
+
+        init() {
+            self = .put
+        }
+
+        init?(rawValue: Int) {
+            switch rawValue {
+            case 0: self = .put
+            case 1: self = .delete
+            default: self = .UNRECOGNIZED(rawValue)
+            }
+        }
+
+        var rawValue: Int {
+            switch self {
+            case .put: return 0
+            case .delete: return 1
+            case let .UNRECOGNIZED(i): return i
+            }
+        }
     }
 
-  }
+    init() {}
 
-  init() {}
-
-  fileprivate var _kv: Etcdserverpb_KeyValue? = nil
-  fileprivate var _prevKv: Etcdserverpb_KeyValue? = nil
+    fileprivate var _kv: Etcdserverpb_KeyValue?
+    fileprivate var _prevKv: Etcdserverpb_KeyValue?
 }
 
 #if swift(>=4.2)
 
-extension Etcdserverpb_Event.EventType: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  static let allCases: [Etcdserverpb_Event.EventType] = [
-    .put,
-    .delete,
-  ]
-}
+    extension Etcdserverpb_Event.EventType: CaseIterable {
+        // The compiler won't synthesize support with the UNRECOGNIZED case.
+        static let allCases: [Etcdserverpb_Event.EventType] = [
+            .put,
+            .delete,
+        ]
+    }
 
-#endif  // swift(>=4.2)
+#endif // swift(>=4.2)
 
 #if swift(>=5.5) && canImport(_Concurrency)
-extension Etcdserverpb_KeyValue: @unchecked Sendable {}
-extension Etcdserverpb_ResponseHeader: @unchecked Sendable {}
-extension Etcdserverpb_RangeRequest: @unchecked Sendable {}
-extension Etcdserverpb_RangeRequest.SortOrder: @unchecked Sendable {}
-extension Etcdserverpb_RangeRequest.SortTarget: @unchecked Sendable {}
-extension Etcdserverpb_RangeResponse: @unchecked Sendable {}
-extension Etcdserverpb_PutRequest: @unchecked Sendable {}
-extension Etcdserverpb_PutResponse: @unchecked Sendable {}
-extension Etcdserverpb_DeleteRangeRequest: @unchecked Sendable {}
-extension Etcdserverpb_DeleteRangeResponse: @unchecked Sendable {}
-extension Etcdserverpb_WatchRequest: @unchecked Sendable {}
-extension Etcdserverpb_WatchRequest.OneOf_RequestUnion: @unchecked Sendable {}
-extension Etcdserverpb_WatchCreateRequest: @unchecked Sendable {}
-extension Etcdserverpb_WatchCreateRequest.FilterType: @unchecked Sendable {}
-extension Etcdserverpb_WatchCancelRequest: @unchecked Sendable {}
-extension Etcdserverpb_WatchProgressRequest: @unchecked Sendable {}
-extension Etcdserverpb_WatchResponse: @unchecked Sendable {}
-extension Etcdserverpb_Event: @unchecked Sendable {}
-extension Etcdserverpb_Event.EventType: @unchecked Sendable {}
-#endif  // swift(>=5.5) && canImport(_Concurrency)
+    extension Etcdserverpb_KeyValue: @unchecked Sendable {}
+    extension Etcdserverpb_ResponseHeader: @unchecked Sendable {}
+    extension Etcdserverpb_RangeRequest: @unchecked Sendable {}
+    extension Etcdserverpb_RangeRequest.SortOrder: @unchecked Sendable {}
+    extension Etcdserverpb_RangeRequest.SortTarget: @unchecked Sendable {}
+    extension Etcdserverpb_RangeResponse: @unchecked Sendable {}
+    extension Etcdserverpb_PutRequest: @unchecked Sendable {}
+    extension Etcdserverpb_PutResponse: @unchecked Sendable {}
+    extension Etcdserverpb_DeleteRangeRequest: @unchecked Sendable {}
+    extension Etcdserverpb_DeleteRangeResponse: @unchecked Sendable {}
+    extension Etcdserverpb_WatchRequest: @unchecked Sendable {}
+    extension Etcdserverpb_WatchRequest.OneOf_RequestUnion: @unchecked Sendable {}
+    extension Etcdserverpb_WatchCreateRequest: @unchecked Sendable {}
+    extension Etcdserverpb_WatchCreateRequest.FilterType: @unchecked Sendable {}
+    extension Etcdserverpb_WatchCancelRequest: @unchecked Sendable {}
+    extension Etcdserverpb_WatchProgressRequest: @unchecked Sendable {}
+    extension Etcdserverpb_WatchResponse: @unchecked Sendable {}
+    extension Etcdserverpb_Event: @unchecked Sendable {}
+    extension Etcdserverpb_Event.EventType: @unchecked Sendable {}
+#endif // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "etcdserverpb"
+private let _protobuf_package = "etcdserverpb"
 
 extension Etcdserverpb_KeyValue: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".KeyValue"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "key"),
-    2: .standard(proto: "create_revision"),
-    3: .standard(proto: "mod_revision"),
-    4: .same(proto: "version"),
-    5: .same(proto: "value"),
-    6: .same(proto: "lease"),
-  ]
+    static let protoMessageName: String = _protobuf_package + ".KeyValue"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "key"),
+        2: .standard(proto: "create_revision"),
+        3: .standard(proto: "mod_revision"),
+        4: .same(proto: "version"),
+        5: .same(proto: "value"),
+        6: .same(proto: "lease"),
+    ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularBytesField(value: &self.key) }()
-      case 2: try { try decoder.decodeSingularInt64Field(value: &self.createRevision) }()
-      case 3: try { try decoder.decodeSingularInt64Field(value: &self.modRevision) }()
-      case 4: try { try decoder.decodeSingularInt64Field(value: &self.version) }()
-      case 5: try { try decoder.decodeSingularBytesField(value: &self.value) }()
-      case 6: try { try decoder.decodeSingularInt64Field(value: &self.lease) }()
-      default: break
-      }
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try decoder.decodeSingularBytesField(value: &key)
+            case 2: try decoder.decodeSingularInt64Field(value: &createRevision)
+            case 3: try decoder.decodeSingularInt64Field(value: &modRevision)
+            case 4: try decoder.decodeSingularInt64Field(value: &version)
+            case 5: try decoder.decodeSingularBytesField(value: &value)
+            case 6: try decoder.decodeSingularInt64Field(value: &lease)
+            default: break
+            }
+        }
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.key.isEmpty {
-      try visitor.visitSingularBytesField(value: self.key, fieldNumber: 1)
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if !key.isEmpty {
+            try visitor.visitSingularBytesField(value: key, fieldNumber: 1)
+        }
+        if createRevision != 0 {
+            try visitor.visitSingularInt64Field(value: createRevision, fieldNumber: 2)
+        }
+        if modRevision != 0 {
+            try visitor.visitSingularInt64Field(value: modRevision, fieldNumber: 3)
+        }
+        if version != 0 {
+            try visitor.visitSingularInt64Field(value: version, fieldNumber: 4)
+        }
+        if !value.isEmpty {
+            try visitor.visitSingularBytesField(value: value, fieldNumber: 5)
+        }
+        if lease != 0 {
+            try visitor.visitSingularInt64Field(value: lease, fieldNumber: 6)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if self.createRevision != 0 {
-      try visitor.visitSingularInt64Field(value: self.createRevision, fieldNumber: 2)
-    }
-    if self.modRevision != 0 {
-      try visitor.visitSingularInt64Field(value: self.modRevision, fieldNumber: 3)
-    }
-    if self.version != 0 {
-      try visitor.visitSingularInt64Field(value: self.version, fieldNumber: 4)
-    }
-    if !self.value.isEmpty {
-      try visitor.visitSingularBytesField(value: self.value, fieldNumber: 5)
-    }
-    if self.lease != 0 {
-      try visitor.visitSingularInt64Field(value: self.lease, fieldNumber: 6)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  static func ==(lhs: Etcdserverpb_KeyValue, rhs: Etcdserverpb_KeyValue) -> Bool {
-    if lhs.key != rhs.key {return false}
-    if lhs.createRevision != rhs.createRevision {return false}
-    if lhs.modRevision != rhs.modRevision {return false}
-    if lhs.version != rhs.version {return false}
-    if lhs.value != rhs.value {return false}
-    if lhs.lease != rhs.lease {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_KeyValue, rhs: Etcdserverpb_KeyValue) -> Bool {
+        if lhs.key != rhs.key { return false }
+        if lhs.createRevision != rhs.createRevision { return false }
+        if lhs.modRevision != rhs.modRevision { return false }
+        if lhs.version != rhs.version { return false }
+        if lhs.value != rhs.value { return false }
+        if lhs.lease != rhs.lease { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_ResponseHeader: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".ResponseHeader"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "cluster_id"),
-    2: .standard(proto: "member_id"),
-    3: .same(proto: "revision"),
-    4: .standard(proto: "raft_term"),
-  ]
+    static let protoMessageName: String = _protobuf_package + ".ResponseHeader"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "cluster_id"),
+        2: .standard(proto: "member_id"),
+        3: .same(proto: "revision"),
+        4: .standard(proto: "raft_term"),
+    ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularUInt64Field(value: &self.clusterID) }()
-      case 2: try { try decoder.decodeSingularUInt64Field(value: &self.memberID) }()
-      case 3: try { try decoder.decodeSingularInt64Field(value: &self.revision) }()
-      case 4: try { try decoder.decodeSingularUInt64Field(value: &self.raftTerm) }()
-      default: break
-      }
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try decoder.decodeSingularUInt64Field(value: &clusterID)
+            case 2: try decoder.decodeSingularUInt64Field(value: &memberID)
+            case 3: try decoder.decodeSingularInt64Field(value: &revision)
+            case 4: try decoder.decodeSingularUInt64Field(value: &raftTerm)
+            default: break
+            }
+        }
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.clusterID != 0 {
-      try visitor.visitSingularUInt64Field(value: self.clusterID, fieldNumber: 1)
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if clusterID != 0 {
+            try visitor.visitSingularUInt64Field(value: clusterID, fieldNumber: 1)
+        }
+        if memberID != 0 {
+            try visitor.visitSingularUInt64Field(value: memberID, fieldNumber: 2)
+        }
+        if revision != 0 {
+            try visitor.visitSingularInt64Field(value: revision, fieldNumber: 3)
+        }
+        if raftTerm != 0 {
+            try visitor.visitSingularUInt64Field(value: raftTerm, fieldNumber: 4)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if self.memberID != 0 {
-      try visitor.visitSingularUInt64Field(value: self.memberID, fieldNumber: 2)
-    }
-    if self.revision != 0 {
-      try visitor.visitSingularInt64Field(value: self.revision, fieldNumber: 3)
-    }
-    if self.raftTerm != 0 {
-      try visitor.visitSingularUInt64Field(value: self.raftTerm, fieldNumber: 4)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  static func ==(lhs: Etcdserverpb_ResponseHeader, rhs: Etcdserverpb_ResponseHeader) -> Bool {
-    if lhs.clusterID != rhs.clusterID {return false}
-    if lhs.memberID != rhs.memberID {return false}
-    if lhs.revision != rhs.revision {return false}
-    if lhs.raftTerm != rhs.raftTerm {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_ResponseHeader, rhs: Etcdserverpb_ResponseHeader) -> Bool {
+        if lhs.clusterID != rhs.clusterID { return false }
+        if lhs.memberID != rhs.memberID { return false }
+        if lhs.revision != rhs.revision { return false }
+        if lhs.raftTerm != rhs.raftTerm { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_RangeRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".RangeRequest"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "key"),
-    2: .standard(proto: "range_end"),
-    3: .same(proto: "limit"),
-    4: .same(proto: "revision"),
-    5: .standard(proto: "sort_order"),
-    6: .standard(proto: "sort_target"),
-    7: .same(proto: "serializable"),
-    8: .standard(proto: "keys_only"),
-    9: .standard(proto: "count_only"),
-    10: .standard(proto: "min_mod_revision"),
-    11: .standard(proto: "max_mod_revision"),
-    12: .standard(proto: "min_create_revision"),
-    13: .standard(proto: "max_create_revision"),
-  ]
+    static let protoMessageName: String = _protobuf_package + ".RangeRequest"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "key"),
+        2: .standard(proto: "range_end"),
+        3: .same(proto: "limit"),
+        4: .same(proto: "revision"),
+        5: .standard(proto: "sort_order"),
+        6: .standard(proto: "sort_target"),
+        7: .same(proto: "serializable"),
+        8: .standard(proto: "keys_only"),
+        9: .standard(proto: "count_only"),
+        10: .standard(proto: "min_mod_revision"),
+        11: .standard(proto: "max_mod_revision"),
+        12: .standard(proto: "min_create_revision"),
+        13: .standard(proto: "max_create_revision"),
+    ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularBytesField(value: &self.key) }()
-      case 2: try { try decoder.decodeSingularBytesField(value: &self.rangeEnd) }()
-      case 3: try { try decoder.decodeSingularInt64Field(value: &self.limit) }()
-      case 4: try { try decoder.decodeSingularInt64Field(value: &self.revision) }()
-      case 5: try { try decoder.decodeSingularEnumField(value: &self.sortOrder) }()
-      case 6: try { try decoder.decodeSingularEnumField(value: &self.sortTarget) }()
-      case 7: try { try decoder.decodeSingularBoolField(value: &self.serializable) }()
-      case 8: try { try decoder.decodeSingularBoolField(value: &self.keysOnly) }()
-      case 9: try { try decoder.decodeSingularBoolField(value: &self.countOnly) }()
-      case 10: try { try decoder.decodeSingularInt64Field(value: &self.minModRevision) }()
-      case 11: try { try decoder.decodeSingularInt64Field(value: &self.maxModRevision) }()
-      case 12: try { try decoder.decodeSingularInt64Field(value: &self.minCreateRevision) }()
-      case 13: try { try decoder.decodeSingularInt64Field(value: &self.maxCreateRevision) }()
-      default: break
-      }
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try decoder.decodeSingularBytesField(value: &key)
+            case 2: try decoder.decodeSingularBytesField(value: &rangeEnd)
+            case 3: try decoder.decodeSingularInt64Field(value: &limit)
+            case 4: try decoder.decodeSingularInt64Field(value: &revision)
+            case 5: try decoder.decodeSingularEnumField(value: &sortOrder)
+            case 6: try decoder.decodeSingularEnumField(value: &sortTarget)
+            case 7: try decoder.decodeSingularBoolField(value: &serializable)
+            case 8: try decoder.decodeSingularBoolField(value: &keysOnly)
+            case 9: try decoder.decodeSingularBoolField(value: &countOnly)
+            case 10: try decoder.decodeSingularInt64Field(value: &minModRevision)
+            case 11: try decoder.decodeSingularInt64Field(value: &maxModRevision)
+            case 12: try decoder.decodeSingularInt64Field(value: &minCreateRevision)
+            case 13: try decoder.decodeSingularInt64Field(value: &maxCreateRevision)
+            default: break
+            }
+        }
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.key.isEmpty {
-      try visitor.visitSingularBytesField(value: self.key, fieldNumber: 1)
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if !key.isEmpty {
+            try visitor.visitSingularBytesField(value: key, fieldNumber: 1)
+        }
+        if !rangeEnd.isEmpty {
+            try visitor.visitSingularBytesField(value: rangeEnd, fieldNumber: 2)
+        }
+        if limit != 0 {
+            try visitor.visitSingularInt64Field(value: limit, fieldNumber: 3)
+        }
+        if revision != 0 {
+            try visitor.visitSingularInt64Field(value: revision, fieldNumber: 4)
+        }
+        if sortOrder != .none {
+            try visitor.visitSingularEnumField(value: sortOrder, fieldNumber: 5)
+        }
+        if sortTarget != .key {
+            try visitor.visitSingularEnumField(value: sortTarget, fieldNumber: 6)
+        }
+        if serializable != false {
+            try visitor.visitSingularBoolField(value: serializable, fieldNumber: 7)
+        }
+        if keysOnly != false {
+            try visitor.visitSingularBoolField(value: keysOnly, fieldNumber: 8)
+        }
+        if countOnly != false {
+            try visitor.visitSingularBoolField(value: countOnly, fieldNumber: 9)
+        }
+        if minModRevision != 0 {
+            try visitor.visitSingularInt64Field(value: minModRevision, fieldNumber: 10)
+        }
+        if maxModRevision != 0 {
+            try visitor.visitSingularInt64Field(value: maxModRevision, fieldNumber: 11)
+        }
+        if minCreateRevision != 0 {
+            try visitor.visitSingularInt64Field(value: minCreateRevision, fieldNumber: 12)
+        }
+        if maxCreateRevision != 0 {
+            try visitor.visitSingularInt64Field(value: maxCreateRevision, fieldNumber: 13)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if !self.rangeEnd.isEmpty {
-      try visitor.visitSingularBytesField(value: self.rangeEnd, fieldNumber: 2)
-    }
-    if self.limit != 0 {
-      try visitor.visitSingularInt64Field(value: self.limit, fieldNumber: 3)
-    }
-    if self.revision != 0 {
-      try visitor.visitSingularInt64Field(value: self.revision, fieldNumber: 4)
-    }
-    if self.sortOrder != .none {
-      try visitor.visitSingularEnumField(value: self.sortOrder, fieldNumber: 5)
-    }
-    if self.sortTarget != .key {
-      try visitor.visitSingularEnumField(value: self.sortTarget, fieldNumber: 6)
-    }
-    if self.serializable != false {
-      try visitor.visitSingularBoolField(value: self.serializable, fieldNumber: 7)
-    }
-    if self.keysOnly != false {
-      try visitor.visitSingularBoolField(value: self.keysOnly, fieldNumber: 8)
-    }
-    if self.countOnly != false {
-      try visitor.visitSingularBoolField(value: self.countOnly, fieldNumber: 9)
-    }
-    if self.minModRevision != 0 {
-      try visitor.visitSingularInt64Field(value: self.minModRevision, fieldNumber: 10)
-    }
-    if self.maxModRevision != 0 {
-      try visitor.visitSingularInt64Field(value: self.maxModRevision, fieldNumber: 11)
-    }
-    if self.minCreateRevision != 0 {
-      try visitor.visitSingularInt64Field(value: self.minCreateRevision, fieldNumber: 12)
-    }
-    if self.maxCreateRevision != 0 {
-      try visitor.visitSingularInt64Field(value: self.maxCreateRevision, fieldNumber: 13)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  static func ==(lhs: Etcdserverpb_RangeRequest, rhs: Etcdserverpb_RangeRequest) -> Bool {
-    if lhs.key != rhs.key {return false}
-    if lhs.rangeEnd != rhs.rangeEnd {return false}
-    if lhs.limit != rhs.limit {return false}
-    if lhs.revision != rhs.revision {return false}
-    if lhs.sortOrder != rhs.sortOrder {return false}
-    if lhs.sortTarget != rhs.sortTarget {return false}
-    if lhs.serializable != rhs.serializable {return false}
-    if lhs.keysOnly != rhs.keysOnly {return false}
-    if lhs.countOnly != rhs.countOnly {return false}
-    if lhs.minModRevision != rhs.minModRevision {return false}
-    if lhs.maxModRevision != rhs.maxModRevision {return false}
-    if lhs.minCreateRevision != rhs.minCreateRevision {return false}
-    if lhs.maxCreateRevision != rhs.maxCreateRevision {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_RangeRequest, rhs: Etcdserverpb_RangeRequest) -> Bool {
+        if lhs.key != rhs.key { return false }
+        if lhs.rangeEnd != rhs.rangeEnd { return false }
+        if lhs.limit != rhs.limit { return false }
+        if lhs.revision != rhs.revision { return false }
+        if lhs.sortOrder != rhs.sortOrder { return false }
+        if lhs.sortTarget != rhs.sortTarget { return false }
+        if lhs.serializable != rhs.serializable { return false }
+        if lhs.keysOnly != rhs.keysOnly { return false }
+        if lhs.countOnly != rhs.countOnly { return false }
+        if lhs.minModRevision != rhs.minModRevision { return false }
+        if lhs.maxModRevision != rhs.maxModRevision { return false }
+        if lhs.minCreateRevision != rhs.minCreateRevision { return false }
+        if lhs.maxCreateRevision != rhs.maxCreateRevision { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_RangeRequest.SortOrder: SwiftProtobuf._ProtoNameProviding {
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "NONE"),
-    1: .same(proto: "ASCEND"),
-    2: .same(proto: "DESCEND"),
-  ]
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        0: .same(proto: "NONE"),
+        1: .same(proto: "ASCEND"),
+        2: .same(proto: "DESCEND"),
+    ]
 }
 
 extension Etcdserverpb_RangeRequest.SortTarget: SwiftProtobuf._ProtoNameProviding {
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "KEY"),
-    1: .same(proto: "VERSION"),
-    2: .same(proto: "CREATE"),
-    3: .same(proto: "MOD"),
-    4: .same(proto: "VALUE"),
-  ]
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        0: .same(proto: "KEY"),
+        1: .same(proto: "VERSION"),
+        2: .same(proto: "CREATE"),
+        3: .same(proto: "MOD"),
+        4: .same(proto: "VALUE"),
+    ]
 }
 
 extension Etcdserverpb_RangeResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".RangeResponse"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "header"),
-    2: .same(proto: "kvs"),
-    3: .same(proto: "more"),
-    4: .same(proto: "count"),
-  ]
+    static let protoMessageName: String = _protobuf_package + ".RangeResponse"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "header"),
+        2: .same(proto: "kvs"),
+        3: .same(proto: "more"),
+        4: .same(proto: "count"),
+    ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularMessageField(value: &self._header) }()
-      case 2: try { try decoder.decodeRepeatedMessageField(value: &self.kvs) }()
-      case 3: try { try decoder.decodeSingularBoolField(value: &self.more) }()
-      case 4: try { try decoder.decodeSingularInt64Field(value: &self.count) }()
-      default: break
-      }
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try decoder.decodeSingularMessageField(value: &_header)
+            case 2: try decoder.decodeRepeatedMessageField(value: &kvs)
+            case 3: try decoder.decodeSingularBoolField(value: &more)
+            case 4: try decoder.decodeSingularInt64Field(value: &count)
+            default: break
+            }
+        }
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    try { if let v = self._header {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    } }()
-    if !self.kvs.isEmpty {
-      try visitor.visitRepeatedMessageField(value: self.kvs, fieldNumber: 2)
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
+        try { if let v = self._header {
+            try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+        } }()
+        if !kvs.isEmpty {
+            try visitor.visitRepeatedMessageField(value: kvs, fieldNumber: 2)
+        }
+        if more != false {
+            try visitor.visitSingularBoolField(value: more, fieldNumber: 3)
+        }
+        if count != 0 {
+            try visitor.visitSingularInt64Field(value: count, fieldNumber: 4)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if self.more != false {
-      try visitor.visitSingularBoolField(value: self.more, fieldNumber: 3)
-    }
-    if self.count != 0 {
-      try visitor.visitSingularInt64Field(value: self.count, fieldNumber: 4)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  static func ==(lhs: Etcdserverpb_RangeResponse, rhs: Etcdserverpb_RangeResponse) -> Bool {
-    if lhs._header != rhs._header {return false}
-    if lhs.kvs != rhs.kvs {return false}
-    if lhs.more != rhs.more {return false}
-    if lhs.count != rhs.count {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_RangeResponse, rhs: Etcdserverpb_RangeResponse) -> Bool {
+        if lhs._header != rhs._header { return false }
+        if lhs.kvs != rhs.kvs { return false }
+        if lhs.more != rhs.more { return false }
+        if lhs.count != rhs.count { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_PutRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".PutRequest"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "key"),
-    2: .same(proto: "value"),
-    3: .same(proto: "lease"),
-    4: .standard(proto: "prev_kv"),
-    5: .standard(proto: "ignore_value"),
-    6: .standard(proto: "ignore_lease"),
-  ]
+    static let protoMessageName: String = _protobuf_package + ".PutRequest"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "key"),
+        2: .same(proto: "value"),
+        3: .same(proto: "lease"),
+        4: .standard(proto: "prev_kv"),
+        5: .standard(proto: "ignore_value"),
+        6: .standard(proto: "ignore_lease"),
+    ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularBytesField(value: &self.key) }()
-      case 2: try { try decoder.decodeSingularBytesField(value: &self.value) }()
-      case 3: try { try decoder.decodeSingularInt64Field(value: &self.lease) }()
-      case 4: try { try decoder.decodeSingularBoolField(value: &self.prevKv) }()
-      case 5: try { try decoder.decodeSingularBoolField(value: &self.ignoreValue) }()
-      case 6: try { try decoder.decodeSingularBoolField(value: &self.ignoreLease) }()
-      default: break
-      }
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try decoder.decodeSingularBytesField(value: &key)
+            case 2: try decoder.decodeSingularBytesField(value: &value)
+            case 3: try decoder.decodeSingularInt64Field(value: &lease)
+            case 4: try decoder.decodeSingularBoolField(value: &prevKv)
+            case 5: try decoder.decodeSingularBoolField(value: &ignoreValue)
+            case 6: try decoder.decodeSingularBoolField(value: &ignoreLease)
+            default: break
+            }
+        }
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.key.isEmpty {
-      try visitor.visitSingularBytesField(value: self.key, fieldNumber: 1)
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if !key.isEmpty {
+            try visitor.visitSingularBytesField(value: key, fieldNumber: 1)
+        }
+        if !value.isEmpty {
+            try visitor.visitSingularBytesField(value: value, fieldNumber: 2)
+        }
+        if lease != 0 {
+            try visitor.visitSingularInt64Field(value: lease, fieldNumber: 3)
+        }
+        if prevKv != false {
+            try visitor.visitSingularBoolField(value: prevKv, fieldNumber: 4)
+        }
+        if ignoreValue != false {
+            try visitor.visitSingularBoolField(value: ignoreValue, fieldNumber: 5)
+        }
+        if ignoreLease != false {
+            try visitor.visitSingularBoolField(value: ignoreLease, fieldNumber: 6)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if !self.value.isEmpty {
-      try visitor.visitSingularBytesField(value: self.value, fieldNumber: 2)
-    }
-    if self.lease != 0 {
-      try visitor.visitSingularInt64Field(value: self.lease, fieldNumber: 3)
-    }
-    if self.prevKv != false {
-      try visitor.visitSingularBoolField(value: self.prevKv, fieldNumber: 4)
-    }
-    if self.ignoreValue != false {
-      try visitor.visitSingularBoolField(value: self.ignoreValue, fieldNumber: 5)
-    }
-    if self.ignoreLease != false {
-      try visitor.visitSingularBoolField(value: self.ignoreLease, fieldNumber: 6)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  static func ==(lhs: Etcdserverpb_PutRequest, rhs: Etcdserverpb_PutRequest) -> Bool {
-    if lhs.key != rhs.key {return false}
-    if lhs.value != rhs.value {return false}
-    if lhs.lease != rhs.lease {return false}
-    if lhs.prevKv != rhs.prevKv {return false}
-    if lhs.ignoreValue != rhs.ignoreValue {return false}
-    if lhs.ignoreLease != rhs.ignoreLease {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_PutRequest, rhs: Etcdserverpb_PutRequest) -> Bool {
+        if lhs.key != rhs.key { return false }
+        if lhs.value != rhs.value { return false }
+        if lhs.lease != rhs.lease { return false }
+        if lhs.prevKv != rhs.prevKv { return false }
+        if lhs.ignoreValue != rhs.ignoreValue { return false }
+        if lhs.ignoreLease != rhs.ignoreLease { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_PutResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".PutResponse"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "header"),
-    2: .standard(proto: "prev_kv"),
-  ]
+    static let protoMessageName: String = _protobuf_package + ".PutResponse"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "header"),
+        2: .standard(proto: "prev_kv"),
+    ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularMessageField(value: &self._header) }()
-      case 2: try { try decoder.decodeSingularMessageField(value: &self._prevKv) }()
-      default: break
-      }
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try decoder.decodeSingularMessageField(value: &_header)
+            case 2: try decoder.decodeSingularMessageField(value: &_prevKv)
+            default: break
+            }
+        }
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    try { if let v = self._header {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    } }()
-    try { if let v = self._prevKv {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
+        try { if let v = self._header {
+            try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+        } }()
+        try { if let v = self._prevKv {
+            try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+        } }()
+        try unknownFields.traverse(visitor: &visitor)
+    }
 
-  static func ==(lhs: Etcdserverpb_PutResponse, rhs: Etcdserverpb_PutResponse) -> Bool {
-    if lhs._header != rhs._header {return false}
-    if lhs._prevKv != rhs._prevKv {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_PutResponse, rhs: Etcdserverpb_PutResponse) -> Bool {
+        if lhs._header != rhs._header { return false }
+        if lhs._prevKv != rhs._prevKv { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_DeleteRangeRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".DeleteRangeRequest"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "key"),
-    2: .standard(proto: "range_end"),
-    3: .standard(proto: "prev_kv"),
-  ]
+    static let protoMessageName: String = _protobuf_package + ".DeleteRangeRequest"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "key"),
+        2: .standard(proto: "range_end"),
+        3: .standard(proto: "prev_kv"),
+    ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularBytesField(value: &self.key) }()
-      case 2: try { try decoder.decodeSingularBytesField(value: &self.rangeEnd) }()
-      case 3: try { try decoder.decodeSingularBoolField(value: &self.prevKv) }()
-      default: break
-      }
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try decoder.decodeSingularBytesField(value: &key)
+            case 2: try decoder.decodeSingularBytesField(value: &rangeEnd)
+            case 3: try decoder.decodeSingularBoolField(value: &prevKv)
+            default: break
+            }
+        }
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.key.isEmpty {
-      try visitor.visitSingularBytesField(value: self.key, fieldNumber: 1)
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if !key.isEmpty {
+            try visitor.visitSingularBytesField(value: key, fieldNumber: 1)
+        }
+        if !rangeEnd.isEmpty {
+            try visitor.visitSingularBytesField(value: rangeEnd, fieldNumber: 2)
+        }
+        if prevKv != false {
+            try visitor.visitSingularBoolField(value: prevKv, fieldNumber: 3)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if !self.rangeEnd.isEmpty {
-      try visitor.visitSingularBytesField(value: self.rangeEnd, fieldNumber: 2)
-    }
-    if self.prevKv != false {
-      try visitor.visitSingularBoolField(value: self.prevKv, fieldNumber: 3)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  static func ==(lhs: Etcdserverpb_DeleteRangeRequest, rhs: Etcdserverpb_DeleteRangeRequest) -> Bool {
-    if lhs.key != rhs.key {return false}
-    if lhs.rangeEnd != rhs.rangeEnd {return false}
-    if lhs.prevKv != rhs.prevKv {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_DeleteRangeRequest, rhs: Etcdserverpb_DeleteRangeRequest) -> Bool {
+        if lhs.key != rhs.key { return false }
+        if lhs.rangeEnd != rhs.rangeEnd { return false }
+        if lhs.prevKv != rhs.prevKv { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_DeleteRangeResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".DeleteRangeResponse"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "header"),
-    2: .same(proto: "deleted"),
-    3: .standard(proto: "prev_kvs"),
-  ]
+    static let protoMessageName: String = _protobuf_package + ".DeleteRangeResponse"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "header"),
+        2: .same(proto: "deleted"),
+        3: .standard(proto: "prev_kvs"),
+    ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularMessageField(value: &self._header) }()
-      case 2: try { try decoder.decodeSingularInt64Field(value: &self.deleted) }()
-      case 3: try { try decoder.decodeRepeatedMessageField(value: &self.prevKvs) }()
-      default: break
-      }
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try decoder.decodeSingularMessageField(value: &_header)
+            case 2: try decoder.decodeSingularInt64Field(value: &deleted)
+            case 3: try decoder.decodeRepeatedMessageField(value: &prevKvs)
+            default: break
+            }
+        }
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    try { if let v = self._header {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    } }()
-    if self.deleted != 0 {
-      try visitor.visitSingularInt64Field(value: self.deleted, fieldNumber: 2)
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
+        try { if let v = self._header {
+            try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+        } }()
+        if deleted != 0 {
+            try visitor.visitSingularInt64Field(value: deleted, fieldNumber: 2)
+        }
+        if !prevKvs.isEmpty {
+            try visitor.visitRepeatedMessageField(value: prevKvs, fieldNumber: 3)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if !self.prevKvs.isEmpty {
-      try visitor.visitRepeatedMessageField(value: self.prevKvs, fieldNumber: 3)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  static func ==(lhs: Etcdserverpb_DeleteRangeResponse, rhs: Etcdserverpb_DeleteRangeResponse) -> Bool {
-    if lhs._header != rhs._header {return false}
-    if lhs.deleted != rhs.deleted {return false}
-    if lhs.prevKvs != rhs.prevKvs {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_DeleteRangeResponse, rhs: Etcdserverpb_DeleteRangeResponse) -> Bool {
+        if lhs._header != rhs._header { return false }
+        if lhs.deleted != rhs.deleted { return false }
+        if lhs.prevKvs != rhs.prevKvs { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_WatchRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".WatchRequest"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "create_request"),
-    2: .standard(proto: "cancel_request"),
-    3: .standard(proto: "progress_request"),
-  ]
+    static let protoMessageName: String = _protobuf_package + ".WatchRequest"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "create_request"),
+        2: .standard(proto: "cancel_request"),
+        3: .standard(proto: "progress_request"),
+    ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try {
-        var v: Etcdserverpb_WatchCreateRequest?
-        var hadOneofValue = false
-        if let current = self.requestUnion {
-          hadOneofValue = true
-          if case .createRequest(let m) = current {v = m}
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try {
+                    var v: Etcdserverpb_WatchCreateRequest?
+                    var hadOneofValue = false
+                    if let current = self.requestUnion {
+                        hadOneofValue = true
+                        if case let .createRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.requestUnion = .createRequest(v)
+                    }
+                }()
+            case 2: try {
+                    var v: Etcdserverpb_WatchCancelRequest?
+                    var hadOneofValue = false
+                    if let current = self.requestUnion {
+                        hadOneofValue = true
+                        if case let .cancelRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.requestUnion = .cancelRequest(v)
+                    }
+                }()
+            case 3: try {
+                    var v: Etcdserverpb_WatchProgressRequest?
+                    var hadOneofValue = false
+                    if let current = self.requestUnion {
+                        hadOneofValue = true
+                        if case let .progressRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.requestUnion = .progressRequest(v)
+                    }
+                }()
+            default: break
+            }
         }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.requestUnion = .createRequest(v)
-        }
-      }()
-      case 2: try {
-        var v: Etcdserverpb_WatchCancelRequest?
-        var hadOneofValue = false
-        if let current = self.requestUnion {
-          hadOneofValue = true
-          if case .cancelRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.requestUnion = .cancelRequest(v)
-        }
-      }()
-      case 3: try {
-        var v: Etcdserverpb_WatchProgressRequest?
-        var hadOneofValue = false
-        if let current = self.requestUnion {
-          hadOneofValue = true
-          if case .progressRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.requestUnion = .progressRequest(v)
-        }
-      }()
-      default: break
-      }
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    switch self.requestUnion {
-    case .createRequest?: try {
-      guard case .createRequest(let v)? = self.requestUnion else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }()
-    case .cancelRequest?: try {
-      guard case .cancelRequest(let v)? = self.requestUnion else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }()
-    case .progressRequest?: try {
-      guard case .progressRequest(let v)? = self.requestUnion else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }()
-    case nil: break
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
+        switch requestUnion {
+        case .createRequest?: try {
+                guard case let .createRequest(v)? = self.requestUnion else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+            }()
+        case .cancelRequest?: try {
+                guard case let .cancelRequest(v)? = self.requestUnion else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+            }()
+        case .progressRequest?: try {
+                guard case let .progressRequest(v)? = self.requestUnion else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+            }()
+        case nil: break
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  static func ==(lhs: Etcdserverpb_WatchRequest, rhs: Etcdserverpb_WatchRequest) -> Bool {
-    if lhs.requestUnion != rhs.requestUnion {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_WatchRequest, rhs: Etcdserverpb_WatchRequest) -> Bool {
+        if lhs.requestUnion != rhs.requestUnion { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_WatchCreateRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".WatchCreateRequest"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "key"),
-    2: .standard(proto: "range_end"),
-    3: .standard(proto: "start_revision"),
-    4: .standard(proto: "progress_notify"),
-    5: .same(proto: "filters"),
-    6: .standard(proto: "prev_kv"),
-    7: .standard(proto: "watch_id"),
-    8: .same(proto: "fragment"),
-  ]
+    static let protoMessageName: String = _protobuf_package + ".WatchCreateRequest"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "key"),
+        2: .standard(proto: "range_end"),
+        3: .standard(proto: "start_revision"),
+        4: .standard(proto: "progress_notify"),
+        5: .same(proto: "filters"),
+        6: .standard(proto: "prev_kv"),
+        7: .standard(proto: "watch_id"),
+        8: .same(proto: "fragment"),
+    ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularBytesField(value: &self.key) }()
-      case 2: try { try decoder.decodeSingularBytesField(value: &self.rangeEnd) }()
-      case 3: try { try decoder.decodeSingularInt64Field(value: &self.startRevision) }()
-      case 4: try { try decoder.decodeSingularBoolField(value: &self.progressNotify) }()
-      case 5: try { try decoder.decodeRepeatedEnumField(value: &self.filters) }()
-      case 6: try { try decoder.decodeSingularBoolField(value: &self.prevKv) }()
-      case 7: try { try decoder.decodeSingularInt64Field(value: &self.watchID) }()
-      case 8: try { try decoder.decodeSingularBoolField(value: &self.fragment) }()
-      default: break
-      }
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try decoder.decodeSingularBytesField(value: &key)
+            case 2: try decoder.decodeSingularBytesField(value: &rangeEnd)
+            case 3: try decoder.decodeSingularInt64Field(value: &startRevision)
+            case 4: try decoder.decodeSingularBoolField(value: &progressNotify)
+            case 5: try decoder.decodeRepeatedEnumField(value: &filters)
+            case 6: try decoder.decodeSingularBoolField(value: &prevKv)
+            case 7: try decoder.decodeSingularInt64Field(value: &watchID)
+            case 8: try decoder.decodeSingularBoolField(value: &fragment)
+            default: break
+            }
+        }
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.key.isEmpty {
-      try visitor.visitSingularBytesField(value: self.key, fieldNumber: 1)
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if !key.isEmpty {
+            try visitor.visitSingularBytesField(value: key, fieldNumber: 1)
+        }
+        if !rangeEnd.isEmpty {
+            try visitor.visitSingularBytesField(value: rangeEnd, fieldNumber: 2)
+        }
+        if startRevision != 0 {
+            try visitor.visitSingularInt64Field(value: startRevision, fieldNumber: 3)
+        }
+        if progressNotify != false {
+            try visitor.visitSingularBoolField(value: progressNotify, fieldNumber: 4)
+        }
+        if !filters.isEmpty {
+            try visitor.visitPackedEnumField(value: filters, fieldNumber: 5)
+        }
+        if prevKv != false {
+            try visitor.visitSingularBoolField(value: prevKv, fieldNumber: 6)
+        }
+        if watchID != 0 {
+            try visitor.visitSingularInt64Field(value: watchID, fieldNumber: 7)
+        }
+        if fragment != false {
+            try visitor.visitSingularBoolField(value: fragment, fieldNumber: 8)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if !self.rangeEnd.isEmpty {
-      try visitor.visitSingularBytesField(value: self.rangeEnd, fieldNumber: 2)
-    }
-    if self.startRevision != 0 {
-      try visitor.visitSingularInt64Field(value: self.startRevision, fieldNumber: 3)
-    }
-    if self.progressNotify != false {
-      try visitor.visitSingularBoolField(value: self.progressNotify, fieldNumber: 4)
-    }
-    if !self.filters.isEmpty {
-      try visitor.visitPackedEnumField(value: self.filters, fieldNumber: 5)
-    }
-    if self.prevKv != false {
-      try visitor.visitSingularBoolField(value: self.prevKv, fieldNumber: 6)
-    }
-    if self.watchID != 0 {
-      try visitor.visitSingularInt64Field(value: self.watchID, fieldNumber: 7)
-    }
-    if self.fragment != false {
-      try visitor.visitSingularBoolField(value: self.fragment, fieldNumber: 8)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  static func ==(lhs: Etcdserverpb_WatchCreateRequest, rhs: Etcdserverpb_WatchCreateRequest) -> Bool {
-    if lhs.key != rhs.key {return false}
-    if lhs.rangeEnd != rhs.rangeEnd {return false}
-    if lhs.startRevision != rhs.startRevision {return false}
-    if lhs.progressNotify != rhs.progressNotify {return false}
-    if lhs.filters != rhs.filters {return false}
-    if lhs.prevKv != rhs.prevKv {return false}
-    if lhs.watchID != rhs.watchID {return false}
-    if lhs.fragment != rhs.fragment {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_WatchCreateRequest, rhs: Etcdserverpb_WatchCreateRequest) -> Bool {
+        if lhs.key != rhs.key { return false }
+        if lhs.rangeEnd != rhs.rangeEnd { return false }
+        if lhs.startRevision != rhs.startRevision { return false }
+        if lhs.progressNotify != rhs.progressNotify { return false }
+        if lhs.filters != rhs.filters { return false }
+        if lhs.prevKv != rhs.prevKv { return false }
+        if lhs.watchID != rhs.watchID { return false }
+        if lhs.fragment != rhs.fragment { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_WatchCreateRequest.FilterType: SwiftProtobuf._ProtoNameProviding {
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "NOPUT"),
-    1: .same(proto: "NODELETE"),
-  ]
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        0: .same(proto: "NOPUT"),
+        1: .same(proto: "NODELETE"),
+    ]
 }
 
 extension Etcdserverpb_WatchCancelRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".WatchCancelRequest"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "watch_id"),
-  ]
+    static let protoMessageName: String = _protobuf_package + ".WatchCancelRequest"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "watch_id"),
+    ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self.watchID) }()
-      default: break
-      }
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try decoder.decodeSingularInt64Field(value: &watchID)
+            default: break
+            }
+        }
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.watchID != 0 {
-      try visitor.visitSingularInt64Field(value: self.watchID, fieldNumber: 1)
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if watchID != 0 {
+            try visitor.visitSingularInt64Field(value: watchID, fieldNumber: 1)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  static func ==(lhs: Etcdserverpb_WatchCancelRequest, rhs: Etcdserverpb_WatchCancelRequest) -> Bool {
-    if lhs.watchID != rhs.watchID {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_WatchCancelRequest, rhs: Etcdserverpb_WatchCancelRequest) -> Bool {
+        if lhs.watchID != rhs.watchID { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_WatchProgressRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".WatchProgressRequest"
-  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
+    static let protoMessageName: String = _protobuf_package + ".WatchProgressRequest"
+    static let _protobuf_nameMap = SwiftProtobuf._NameMap()
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let _ = try decoder.nextFieldNumber() {
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let _ = try decoder.nextFieldNumber() {}
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    try unknownFields.traverse(visitor: &visitor)
-  }
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        try unknownFields.traverse(visitor: &visitor)
+    }
 
-  static func ==(lhs: Etcdserverpb_WatchProgressRequest, rhs: Etcdserverpb_WatchProgressRequest) -> Bool {
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_WatchProgressRequest, rhs: Etcdserverpb_WatchProgressRequest) -> Bool {
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_WatchResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".WatchResponse"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "header"),
-    2: .standard(proto: "watch_id"),
-    3: .same(proto: "created"),
-    4: .same(proto: "canceled"),
-    5: .standard(proto: "compact_revision"),
-    6: .standard(proto: "cancel_reason"),
-    7: .same(proto: "fragment"),
-    11: .same(proto: "events"),
-  ]
+    static let protoMessageName: String = _protobuf_package + ".WatchResponse"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "header"),
+        2: .standard(proto: "watch_id"),
+        3: .same(proto: "created"),
+        4: .same(proto: "canceled"),
+        5: .standard(proto: "compact_revision"),
+        6: .standard(proto: "cancel_reason"),
+        7: .same(proto: "fragment"),
+        11: .same(proto: "events"),
+    ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularMessageField(value: &self._header) }()
-      case 2: try { try decoder.decodeSingularInt64Field(value: &self.watchID) }()
-      case 3: try { try decoder.decodeSingularBoolField(value: &self.created) }()
-      case 4: try { try decoder.decodeSingularBoolField(value: &self.canceled) }()
-      case 5: try { try decoder.decodeSingularInt64Field(value: &self.compactRevision) }()
-      case 6: try { try decoder.decodeSingularStringField(value: &self.cancelReason) }()
-      case 7: try { try decoder.decodeSingularBoolField(value: &self.fragment) }()
-      case 11: try { try decoder.decodeRepeatedMessageField(value: &self.events) }()
-      default: break
-      }
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try decoder.decodeSingularMessageField(value: &_header)
+            case 2: try decoder.decodeSingularInt64Field(value: &watchID)
+            case 3: try decoder.decodeSingularBoolField(value: &created)
+            case 4: try decoder.decodeSingularBoolField(value: &canceled)
+            case 5: try decoder.decodeSingularInt64Field(value: &compactRevision)
+            case 6: try decoder.decodeSingularStringField(value: &cancelReason)
+            case 7: try decoder.decodeSingularBoolField(value: &fragment)
+            case 11: try decoder.decodeRepeatedMessageField(value: &events)
+            default: break
+            }
+        }
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    try { if let v = self._header {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    } }()
-    if self.watchID != 0 {
-      try visitor.visitSingularInt64Field(value: self.watchID, fieldNumber: 2)
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
+        try { if let v = self._header {
+            try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+        } }()
+        if watchID != 0 {
+            try visitor.visitSingularInt64Field(value: watchID, fieldNumber: 2)
+        }
+        if created != false {
+            try visitor.visitSingularBoolField(value: created, fieldNumber: 3)
+        }
+        if canceled != false {
+            try visitor.visitSingularBoolField(value: canceled, fieldNumber: 4)
+        }
+        if compactRevision != 0 {
+            try visitor.visitSingularInt64Field(value: compactRevision, fieldNumber: 5)
+        }
+        if !cancelReason.isEmpty {
+            try visitor.visitSingularStringField(value: cancelReason, fieldNumber: 6)
+        }
+        if fragment != false {
+            try visitor.visitSingularBoolField(value: fragment, fieldNumber: 7)
+        }
+        if !events.isEmpty {
+            try visitor.visitRepeatedMessageField(value: events, fieldNumber: 11)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if self.created != false {
-      try visitor.visitSingularBoolField(value: self.created, fieldNumber: 3)
-    }
-    if self.canceled != false {
-      try visitor.visitSingularBoolField(value: self.canceled, fieldNumber: 4)
-    }
-    if self.compactRevision != 0 {
-      try visitor.visitSingularInt64Field(value: self.compactRevision, fieldNumber: 5)
-    }
-    if !self.cancelReason.isEmpty {
-      try visitor.visitSingularStringField(value: self.cancelReason, fieldNumber: 6)
-    }
-    if self.fragment != false {
-      try visitor.visitSingularBoolField(value: self.fragment, fieldNumber: 7)
-    }
-    if !self.events.isEmpty {
-      try visitor.visitRepeatedMessageField(value: self.events, fieldNumber: 11)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  static func ==(lhs: Etcdserverpb_WatchResponse, rhs: Etcdserverpb_WatchResponse) -> Bool {
-    if lhs._header != rhs._header {return false}
-    if lhs.watchID != rhs.watchID {return false}
-    if lhs.created != rhs.created {return false}
-    if lhs.canceled != rhs.canceled {return false}
-    if lhs.compactRevision != rhs.compactRevision {return false}
-    if lhs.cancelReason != rhs.cancelReason {return false}
-    if lhs.fragment != rhs.fragment {return false}
-    if lhs.events != rhs.events {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_WatchResponse, rhs: Etcdserverpb_WatchResponse) -> Bool {
+        if lhs._header != rhs._header { return false }
+        if lhs.watchID != rhs.watchID { return false }
+        if lhs.created != rhs.created { return false }
+        if lhs.canceled != rhs.canceled { return false }
+        if lhs.compactRevision != rhs.compactRevision { return false }
+        if lhs.cancelReason != rhs.cancelReason { return false }
+        if lhs.fragment != rhs.fragment { return false }
+        if lhs.events != rhs.events { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_Event: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".Event"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "type"),
-    2: .same(proto: "kv"),
-    3: .standard(proto: "prev_kv"),
-  ]
+    static let protoMessageName: String = _protobuf_package + ".Event"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "type"),
+        2: .same(proto: "kv"),
+        3: .standard(proto: "prev_kv"),
+    ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularEnumField(value: &self.type) }()
-      case 2: try { try decoder.decodeSingularMessageField(value: &self._kv) }()
-      case 3: try { try decoder.decodeSingularMessageField(value: &self._prevKv) }()
-      default: break
-      }
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try decoder.decodeSingularEnumField(value: &type)
+            case 2: try decoder.decodeSingularMessageField(value: &_kv)
+            case 3: try decoder.decodeSingularMessageField(value: &_prevKv)
+            default: break
+            }
+        }
     }
-  }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    if self.type != .put {
-      try visitor.visitSingularEnumField(value: self.type, fieldNumber: 1)
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
+        if type != .put {
+            try visitor.visitSingularEnumField(value: type, fieldNumber: 1)
+        }
+        try { if let v = self._kv {
+            try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+        } }()
+        try { if let v = self._prevKv {
+            try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+        } }()
+        try unknownFields.traverse(visitor: &visitor)
     }
-    try { if let v = self._kv {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    } }()
-    try { if let v = self._prevKv {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  static func ==(lhs: Etcdserverpb_Event, rhs: Etcdserverpb_Event) -> Bool {
-    if lhs.type != rhs.type {return false}
-    if lhs._kv != rhs._kv {return false}
-    if lhs._prevKv != rhs._prevKv {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    static func == (lhs: Etcdserverpb_Event, rhs: Etcdserverpb_Event) -> Bool {
+        if lhs.type != rhs.type { return false }
+        if lhs._kv != rhs._kv { return false }
+        if lhs._prevKv != rhs._prevKv { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }
 
 extension Etcdserverpb_Event.EventType: SwiftProtobuf._ProtoNameProviding {
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "PUT"),
-    1: .same(proto: "DELETE"),
-  ]
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        0: .same(proto: "PUT"),
+        1: .same(proto: "DELETE"),
+    ]
 }

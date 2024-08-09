@@ -19,14 +19,14 @@ public struct WatchEvent {
     public var previousKeyValue: KeyValue?
 
     init(protoEvent: Etcdserverpb_Event) {
-        self.keyValue = KeyValue(protoKeyValue: protoEvent.kv)
+        keyValue = KeyValue(protoKeyValue: protoEvent.kv)
         if let protoPrevKV = protoEvent.hasPrevKv ? protoEvent.prevKv : nil {
-            self.previousKeyValue = KeyValue(protoKeyValue: protoPrevKV)
+            previousKeyValue = KeyValue(protoKeyValue: protoPrevKV)
         } else {
-            self.previousKeyValue = nil
+            previousKeyValue = nil
         }
     }
-    
+
     /// Struct representing a watch event in etcd.
     ///
     /// - Parameters:

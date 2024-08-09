@@ -24,14 +24,14 @@ public struct KeyValue {
     public var lease: Int
 
     init(protoKeyValue: Etcdserverpb_KeyValue) {
-        self.key = protoKeyValue.key
-        self.createRevision = Int(protoKeyValue.createRevision)
-        self.modRevision = Int(protoKeyValue.modRevision)
-        self.version = Int(protoKeyValue.version)
-        self.value = protoKeyValue.value
-        self.lease = Int(protoKeyValue.lease)
+        key = protoKeyValue.key
+        createRevision = Int(protoKeyValue.createRevision)
+        modRevision = Int(protoKeyValue.modRevision)
+        version = Int(protoKeyValue.version)
+        value = protoKeyValue.value
+        lease = Int(protoKeyValue.lease)
     }
-    
+
     /// Initialize a new KeyValue.
     ///
     /// - Parameters:
