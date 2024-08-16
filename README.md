@@ -76,4 +76,4 @@ struct Example {
 ```
 
 ## Contributing
-To contribute to this package, please look at [Contributing.md](Sources/ETCDExample/ETCDExample.swift)
+To contribute to this package, please look at [CONTRIBUTING.md](CONTRIBUTING.md)
