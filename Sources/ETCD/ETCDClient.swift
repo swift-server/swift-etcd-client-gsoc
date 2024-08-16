@@ -78,21 +78,13 @@ public final class EtcdClient: @unchecked Sendable {
         return kv.value
     }
 
-    /// Delete the value for a key from the ETCD server.
+    /// Delete the value for a range from the ETCD server.
     ///
-    /// - Parameter key: The key to delete. Parameter is of type Sequence<UInt8>.
-    public func delete(_ key: some Sequence<UInt8>) async throws {
-        var deleteRangeRequest = Etcdserverpb_DeleteRangeRequest()
-        deleteRangeRequest.key = Data(key)
-        let call = client.deleteRange(deleteRangeRequest)
+    /// - Parameter deleteRangeRequest: The rangeRequest to delete.
+    public func deleteRange(_ deleteRangeRequest: DeleteRangeRequest) async throws {
+        let protoDeleteRangeRequest = deleteRangeRequest.toProto()
+        let call = client.deleteRange(protoDeleteRangeRequest)
         _ = try await call.response.get()
-    }
-
-    /// Deletes the value for a key from the ETCD server.
-    ///
-    /// - Parameter key: The key to delete the value for. Parameter is of type String.
-    public func delete(_ key: String) async throws {
-        return try await delete(key.utf8)
     }
 
     /// Puts a value for a specified key in the ETCD server. If the key does not exist, a new key, value pair is created.

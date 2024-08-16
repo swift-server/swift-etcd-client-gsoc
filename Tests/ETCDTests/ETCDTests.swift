@@ -52,8 +52,9 @@ final class EtcdClientTests: XCTestCase {
         var fetchedValue = try await etcdClient.getRange(rangeRequest)
         XCTAssertNotNil(fetchedValue)
 
-        try await etcdClient.delete(key)
-
+        let deleteRangeRequest = DeleteRangeRequest(key: rangeRequestKey)
+        try await etcdClient.deleteRange(deleteRangeRequest)
+        
         fetchedValue = try await etcdClient.getRange(rangeRequest)
         XCTAssertNil(fetchedValue)
     }
@@ -65,8 +66,9 @@ final class EtcdClientTests: XCTestCase {
         var fetchedValue = try await etcdClient.getRange(rangeRequest)
         XCTAssertNil(fetchedValue)
 
-        try await etcdClient.delete(key)
-
+        let deleteRangeRequest = DeleteRangeRequest(key: key)
+        try await etcdClient.deleteRange(deleteRangeRequest)
+        
         fetchedValue = try await etcdClient.getRange(rangeRequest)
         XCTAssertNil(fetchedValue)
     }
