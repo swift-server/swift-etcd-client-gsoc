@@ -97,12 +97,12 @@ final class EtcdClientTests: XCTestCase {
     func testWatch() async throws {
         let key = "testKey"
         let value = "testValue".data(using: .utf8)!
-
-        try await etcdClient.put(key, value: "foo")
+        let client = try XCTUnwrap(etcdClient)
+        try await client.put(key, value: "foo")
 
         try await withThrowingTaskGroup(of: Void.self) { group in
             group.addTask {
-                try await self.etcdClient.watch(key) { watchAsyncSequence in
+                try await client.watch(key) { watchAsyncSequence in
                     var iterator = watchAsyncSequence.makeAsyncIterator()
                     let events = try await iterator.next()
                     guard let events = events else {
@@ -122,7 +122,7 @@ final class EtcdClientTests: XCTestCase {
             }
 
             try await Task.sleep(nanoseconds: 1_000_000_000)
-            try await self.etcdClient.put(key, value: String(data: value, encoding: .utf8)!)
+            try await client.put(key, value: String(data: value, encoding: .utf8)!)
             group.cancelAll()
         }
     }

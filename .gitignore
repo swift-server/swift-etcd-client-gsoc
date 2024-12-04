@@ -10,3 +10,4 @@ DerivedData/
 Package.resolved
 .swiftpm
 /out
+.vscode
