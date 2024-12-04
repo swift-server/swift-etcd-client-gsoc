@@ -16,6 +16,9 @@
 *.yml
 *.yaml
 *.json
+*.proto
+*.pb.swift
+*.grpc.swift
 Package.swift
 **/Package.swift
 Package@-*.swift
