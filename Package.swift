@@ -27,7 +27,7 @@ let package = Package(
         .library(
             name: "ETCD",
             targets: ["ETCD"]
-        ),
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.56.0"),

@@ -19,13 +19,13 @@ public struct DeleteRangeRequest {
     public var key: Data
     public var rangeEnd: Data?
     public var prevKV: Bool = false
-    
+
     init(protoDeleteRangeRequest: Etcdserverpb_DeleteRangeRequest) {
         self.key = protoDeleteRangeRequest.key
         self.rangeEnd = protoDeleteRangeRequest.rangeEnd.isEmpty ? nil : protoDeleteRangeRequest.rangeEnd
         self.prevKV = protoDeleteRangeRequest.prevKv
     }
-    
+
     /// Struct representing a deleteRangeRequest in etcd.
     ///
     /// - Parameters:
@@ -37,7 +37,7 @@ public struct DeleteRangeRequest {
         self.rangeEnd = rangeEnd
         self.prevKV = prevKV
     }
-    
+
     func toProto() -> Etcdserverpb_DeleteRangeRequest {
         var protoDeleteRangeRequest = Etcdserverpb_DeleteRangeRequest()
         protoDeleteRangeRequest.key = self.key

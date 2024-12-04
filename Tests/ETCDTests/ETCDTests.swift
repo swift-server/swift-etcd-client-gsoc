@@ -54,7 +54,7 @@ final class EtcdClientTests: XCTestCase {
 
         let deleteRangeRequest = DeleteRangeRequest(key: rangeRequestKey)
         try await etcdClient.deleteRange(deleteRangeRequest)
-        
+
         fetchedValue = try await etcdClient.getRange(rangeRequest)
         XCTAssertNil(fetchedValue)
     }
@@ -68,7 +68,7 @@ final class EtcdClientTests: XCTestCase {
 
         let deleteRangeRequest = DeleteRangeRequest(key: key)
         try await etcdClient.deleteRange(deleteRangeRequest)
-        
+
         fetchedValue = try await etcdClient.getRange(rangeRequest)
         XCTAssertNil(fetchedValue)
     }
