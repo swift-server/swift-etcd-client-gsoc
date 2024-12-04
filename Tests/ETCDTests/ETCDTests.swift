@@ -1,6 +1,3 @@
-import ETCD
-import NIO
-
 //===----------------------------------------------------------------------===//
 //
 // This source file is part of the swift-etcd-client-gsoc open source project
@@ -14,6 +11,9 @@ import NIO
 // SPDX-License-Identifier: Apache-2.0
 //
 //===----------------------------------------------------------------------===//
+
+import ETCD
+import NIO
 import XCTest
 
 final class EtcdClientTests: XCTestCase {
