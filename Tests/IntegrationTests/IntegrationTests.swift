@@ -1,6 +1,3 @@
-import ETCD
-import NIO
-
 //===----------------------------------------------------------------------===//
 //
 // This source file is part of the swift-etcd-client-gsoc open source project
@@ -14,18 +11,22 @@ import NIO
 // SPDX-License-Identifier: Apache-2.0
 //
 //===----------------------------------------------------------------------===//
+
+import ETCD
+import NIO
 import XCTest
 
-final class EtcdClientTests: XCTestCase {
-    var eventLoopGroup: EventLoopGroup!
-    var etcdClient: EtcdClient!
+final class IntegrationTests: XCTestCase {
+
+    private static let integrationTestEnabled = getBoolEnv("SWIFT_ETCD_CLIENT_INTEGRATION_TEST_ENABLED") ?? false
 
     override func setUp() async throws {
-        eventLoopGroup = MultiThreadedEventLoopGroup.singleton
-        etcdClient = EtcdClient(host: "localhost", port: 2379, eventLoopGroup: eventLoopGroup)
+        try XCTSkipUnless(Self.integrationTestEnabled)
     }
 
     func testSetAndGetStringValue() async throws {
+        let etcdClient = EtcdClient.testClient
+
         try await etcdClient.set("testKey", value: "testValue")
         let key = "testKey".data(using: .utf8)!
         let rangeRequest = RangeRequest(key: key)
@@ -36,6 +37,8 @@ final class EtcdClientTests: XCTestCase {
     }
 
     func testGetNonExistentKey() async throws {
+        let etcdClient = EtcdClient.testClient
+
         let key = "nonExistentKey".data(using: .utf8)!
         let rangeRequest = RangeRequest(key: key)
         let result = try await etcdClient.getRange(rangeRequest)
@@ -43,6 +46,8 @@ final class EtcdClientTests: XCTestCase {
     }
 
     func testDeleteKeyExists() async throws {
+        let etcdClient = EtcdClient.testClient
+
         let key = "testKey"
         let value = "testValue"
         try await etcdClient.set(key, value: value)
@@ -54,12 +59,14 @@ final class EtcdClientTests: XCTestCase {
 
         let deleteRangeRequest = DeleteRangeRequest(key: rangeRequestKey)
         try await etcdClient.deleteRange(deleteRangeRequest)
-        
+
         fetchedValue = try await etcdClient.getRange(rangeRequest)
         XCTAssertNil(fetchedValue)
     }
 
     func testDeleteNonExistentKey() async throws {
+        let etcdClient = EtcdClient.testClient
+
         let key = "testKey".data(using: .utf8)!
         let rangeRequest = RangeRequest(key: key)
 
@@ -68,12 +75,14 @@ final class EtcdClientTests: XCTestCase {
 
         let deleteRangeRequest = DeleteRangeRequest(key: key)
         try await etcdClient.deleteRange(deleteRangeRequest)
-        
+
         fetchedValue = try await etcdClient.getRange(rangeRequest)
         XCTAssertNil(fetchedValue)
     }
 
     func testUpdateExistingKey() async throws {
+        let etcdClient = EtcdClient.testClient
+
         let key = "testKey"
         let value = "testValue"
         try await etcdClient.set(key, value: value)
@@ -95,6 +104,8 @@ final class EtcdClientTests: XCTestCase {
     }
 
     func testWatch() async throws {
+        let etcdClient = EtcdClient.testClient
+
         let key = "testKey"
         let value = "testValue".data(using: .utf8)!
 
@@ -102,7 +113,7 @@ final class EtcdClientTests: XCTestCase {
 
         try await withThrowingTaskGroup(of: Void.self) { group in
             group.addTask {
-                try await self.etcdClient.watch(key) { watchAsyncSequence in
+                try await etcdClient.watch(key) { watchAsyncSequence in
                     var iterator = watchAsyncSequence.makeAsyncIterator()
                     let events = try await iterator.next()
                     guard let events = events else {
@@ -122,8 +133,27 @@ final class EtcdClientTests: XCTestCase {
             }
 
             try await Task.sleep(nanoseconds: 1_000_000_000)
-            try await self.etcdClient.put(key, value: String(data: value, encoding: .utf8)!)
+            try await etcdClient.put(key, value: String(data: value, encoding: .utf8)!)
             group.cancelAll()
         }
     }
 }
+
+extension EtcdClient {
+    fileprivate static let testClient = EtcdClient(
+        host: ProcessInfo.processInfo.environment["ETCD_HOST"] ?? "localhost",
+        port: getIntEnv("ETCD_PORT") ?? 2379,
+        eventLoopGroup: .singletonMultiThreadedEventLoopGroup
+    )
+}
+
+/// Returns true if `key` is a truthy string, otherwise returns false.
+private func getBoolEnv(_ key: String) -> Bool? {
+    switch ProcessInfo.processInfo.environment[key]?.lowercased() {
+    case .none: return nil
+    case "true", "y", "yes", "on", "1": return true
+    default: return false
+    }
+}
+
+private func getIntEnv(_ key: String) -> Int? { ProcessInfo.processInfo.environment[key].flatMap(Int.init(_:)) }

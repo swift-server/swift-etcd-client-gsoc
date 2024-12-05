@@ -1,5 +1,3 @@
-import Dispatch
-
 //===----------------------------------------------------------------------===//
 //
 // This source file is part of the swift-etcd-client-gsoc open source project
@@ -13,6 +11,8 @@ import Dispatch
 // SPDX-License-Identifier: Apache-2.0
 //
 //===----------------------------------------------------------------------===//
+
+import Dispatch
 import ETCD
 import NIO
 
