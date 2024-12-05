@@ -21,6 +21,38 @@ jobs:
       linux_nightly_6_0_arguments_override: "--explicit-target-dependency-import-check error -Xswiftc -require-explicit-sendable"
       linux_nightly_main_arguments_override: "--explicit-target-dependency-import-check error -Xswiftc -require-explicit-sendable"
 
+  # Integration tests use a running etcd so this job uses a service container.
+  integration-tests:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    services:
+      etcd:
+        image: quay.io/coreos/etcd:v3.5.6
+        env:
+          ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379
+          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+          ETCD_INITIAL_CLUSTER_STATE: new
+        ports:
+          - 2379:2379
+    container:
+      image: swift:6.0-noble
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Build package
+        run: swift build --build-tests
+      - name: Run integration tests
+        shell: bash  # explicitly choose bash, which ensures -o pipefail
+        run: swift test --filter "IntegrationTests" | tee test.out
+        env:
+          SWIFT_ETCD_CLIENT_INTEGRATION_TEST_ENABLED: true
+          ETCD_HOST: etcd
+          ETCD_PORT: 2379
+      - name: Check integration tests actually did run
+        run: test -r test.out && ! grep -i -e "executed 0 tests" -e "skipped" test.out
+
   cxx-interop:
     name: Cxx interop
     uses: apple/swift-nio/.github/workflows/cxx_interop.yml@main
