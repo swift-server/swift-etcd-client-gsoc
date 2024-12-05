@@ -16,7 +16,14 @@ import ETCD
 import NIO
 import XCTest
 
-final class EtcdClientTests: XCTestCase {
+final class IntegrationTests: XCTestCase {
+
+    private static let integrationTestEnabled = getBoolEnv("SWIFT_ETCD_CLIENT_INTEGRATION_TEST_ENABLED") ?? false
+
+    override func setUp() async throws {
+        try XCTSkipUnless(Self.integrationTestEnabled)
+    }
+
     func testSetAndGetStringValue() async throws {
         let etcdClient = EtcdClient.testClient
 
@@ -134,8 +141,19 @@ final class EtcdClientTests: XCTestCase {
 
 extension EtcdClient {
     fileprivate static let testClient = EtcdClient(
-        host: "localhost",
-        port: 2379,
+        host: ProcessInfo.processInfo.environment["ETCD_HOST"] ?? "localhost",
+        port: getIntEnv("ETCD_PORT") ?? 2379,
         eventLoopGroup: .singletonMultiThreadedEventLoopGroup
     )
 }
+
+/// Returns true if `key` is a truthy string, otherwise returns false.
+private func getBoolEnv(_ key: String) -> Bool? {
+    switch ProcessInfo.processInfo.environment[key]?.lowercased() {
+    case .none: return nil
+    case "true", "y", "yes", "on", "1": return true
+    default: return false
+    }
+}
+
+private func getIntEnv(_ key: String) -> Int? { ProcessInfo.processInfo.environment[key].flatMap(Int.init(_:)) }
