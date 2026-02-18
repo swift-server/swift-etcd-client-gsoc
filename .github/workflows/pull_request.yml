@@ -41,7 +41,7 @@ jobs:
       image: swift:6.0-noble
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
       - name: Build package
