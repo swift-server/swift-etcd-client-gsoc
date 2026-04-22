@@ -1,7 +1,7 @@
 # Swift ETCD client
 
 > [!WARNING]
-> This repository was a Google Summer of Code project that didn't reach feature completness to offer a full ETCD client. For now we have archived the repository to reduce our maintenance burden but if you are intereted in taking on the maintenance please reach out to the Swift Server Workgroup in the Swift forums.
+> This repository was a Google Summer of Code project that didn't reach feature completness to offer a full ETCD client. For now we have archived the repository to reduce our maintenance burden but if you are interested in taking on the maintenance please reach out to the Swift Server Workgroup in the Swift forums.
 
 Swift ETCD is a Swift Package that provides a convenient way to communicate with [etcd](https://etcd.io) servers.
 
